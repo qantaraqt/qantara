@@ -1,0 +1,77 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import { method } from "../../content/site";
+---
+
+<section id="metodo" class="py-20 md:py-28">
+  <div class="u-container grid grid-cols-12 gap-10">
+    <div class="col-span-12 md:col-span-4 md:sticky md:top-28 self-start">
+      <SectionHeader eyebrow="método" meta={`0${method.length} etapas`}>
+        como trabalhamos.
+      </SectionHeader>
+      <p class="text-white/55 text-sm max-w-[38ch]">
+        Processo linear, validável em cada etapa. Sem caixa-preta, sem
+        surpresas no final.
+      </p>
+    </div>
+
+      <ol class="col-span-12 md:col-span-8 method-timeline">
+      {method.map((s) => (
+        <li class="method-step">
+          <span class="method-node" aria-hidden="true"></span>
+          <div class="method-content">
+            <div class="flex items-baseline gap-3 mb-1.5">
+              <span class="mono text-[0.6rem] text-white/35">{s.num}</span>
+              <h3 class="display text-xl md:text-2xl" style="letter-spacing:-0.02em">{s.title}</h3>
+            </div>
+            <p class="text-white/60 text-sm max-w-[52ch]">{s.desc}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .method-timeline {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+  .method-timeline::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 4px;
+    bottom: 4px;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in oklch, var(--color-teal) 50%, transparent) 12%,
+      color-mix(in oklch, var(--color-teal) 20%, transparent) 88%,
+      transparent
+    );
+  }
+
+  .method-step {
+    position: relative;
+    padding-bottom: 1.75rem;
+  }
+  .method-step:last-child { padding-bottom: 0; }
+
+  .method-node {
+    position: absolute;
+    left: calc(-1.75rem + 0px);
+    top: 9px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 1px solid color-mix(in oklch, var(--color-teal) 65%, transparent);
+    background: var(--color-ink-deep);
+    transition: box-shadow 400ms var(--ease-emph), background 300ms ease;
+  }
+  .method-step:hover .method-node {
+    background: var(--color-teal);
+    box-shadow: 0 0 18px color-mix(in oklch, var(--color-teal) 60%, transparent);
+  }
+</style>

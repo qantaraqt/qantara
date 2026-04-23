@@ -1,0 +1,113 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import { works } from "../../content/site";
+---
+
+<section id="trabalhos" class="py-20 md:py-28">
+  <div class="u-container">
+    <SectionHeader eyebrow="trabalhos" meta="selecionados">
+      projetos recentes.
+    </SectionHeader>
+
+    <ul class="works-list">
+      {works.map((w) => (
+        <li>
+          <article class="work-row" aria-label={w.title}>
+            <span class="work-glow" aria-hidden="true"></span>
+
+            <span class="mono text-xs text-white/35 work-num">{w.num}</span>
+
+            <div class="work-main">
+              <h3 class="display work-title">{w.title}</h3>
+              <p class="text-white/60 text-sm max-w-[56ch] mt-2">{w.summary}</p>
+              <ul class="work-tags">
+                {w.tags.map((t) => (
+                  <li class="mono text-[0.7rem] text-white/50">{t}</li>
+                ))}
+              </ul>
+            </div>
+
+            <span class="mono text-xs text-white/35 work-year">{w.year}</span>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .works-list > li {
+    border-top: 1px solid color-mix(in oklch, white 7%, transparent);
+  }
+  .works-list > li:last-child {
+    border-bottom: 1px solid color-mix(in oklch, white 7%, transparent);
+  }
+
+  .work-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem 1.5rem;
+    align-items: start;
+    padding: 1.1rem 0;
+  }
+
+  .work-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--color-teal) 5%, transparent),
+      transparent 55%
+    );
+    opacity: 0;
+    transition: opacity 400ms var(--ease-emph);
+    pointer-events: none;
+  }
+  li:hover .work-glow { opacity: 1; }
+
+  .work-num {
+    letter-spacing: 0.18em;
+    padding-top: 0.35rem;
+    font-size: 0.65rem !important;
+    color: color-mix(in oklch, var(--color-teal) 55%, transparent) !important;
+  }
+
+  .work-title {
+    color: color-mix(in oklch, white 88%, transparent);
+    font-size: clamp(1.05rem, 2.2vw, 1.5rem) !important;
+    letter-spacing: -0.02em;
+  }
+
+  .work-main > p {
+    font-size: 0.85rem;
+    color: color-mix(in oklch, white 55%, transparent);
+    margin-top: 0.35rem !important;
+  }
+
+  .work-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin-top: 0.5rem;
+  }
+  .work-tags li {
+    font-size: 0.6rem !important;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .work-year {
+    padding-top: 0.35rem;
+    font-size: 0.65rem !important;
+    letter-spacing: 0.18em;
+    color: color-mix(in oklch, white 40%, transparent) !important;
+  }
+
+  @media (max-width: 768px) {
+    .work-row {
+      grid-template-columns: auto 1fr auto;
+      gap: 0.75rem 1rem;
+    }
+  }
+</style>

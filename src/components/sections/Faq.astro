@@ -1,0 +1,106 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import Disclosure from "../ui/Disclosure.astro";
+import { faqs } from "../../content/site";
+---
+
+<section class="py-20 md:py-28 relative overflow-hidden">
+  <div class="faq-orb" aria-hidden="true"></div>
+
+  <div class="u-container relative">
+    <div class="mx-auto max-w-[720px]">
+      <SectionHeader eyebrow="dúvidas" meta="respostas diretas">
+        perguntas frequentes.
+      </SectionHeader>
+
+      <ul class="faq-list">
+      {faqs.map((f, i) => (
+        <li>
+          <Disclosure name="faq" open={i === 0} class="faq-item">
+            <div slot="summary" class="faq-summary">
+              <span class="display text-base md:text-lg faq-q">{f.q}</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" class="w-full h-full">
+                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" stroke-width="1.25" fill="none" />
+                </svg>
+              </span>
+            </div>
+            <p class="text-white/65 text-[0.9rem] leading-relaxed pt-5 pb-1 pr-2 max-w-[56ch]">{f.a}</p>
+          </Disclosure>
+        </li>
+      ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-orb {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vmax;
+    height: 80vmax;
+    background: radial-gradient(
+      circle at center,
+      color-mix(in oklch, var(--color-teal) 10%, transparent) 0%,
+      transparent 40%
+    );
+    filter: blur(80px);
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .faq-list > li {
+    border-top: 1px solid color-mix(in oklch, white 10%, transparent);
+  }
+  .faq-list > li:last-child {
+    border-bottom: 1px solid color-mix(in oklch, white 10%, transparent);
+  }
+
+  .faq-item {
+    padding: 1.75rem 0;
+    transition: padding 300ms var(--ease-emph);
+  }
+  .faq-item[open] {
+    padding: 2rem 0 2.25rem;
+  }
+  .faq-summary {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.25rem;
+    letter-spacing: -0.015em;
+  }
+  .faq-q {
+    color: color-mix(in oklch, white 90%, transparent);
+    transition: color 300ms ease;
+    line-height: 1.35;
+    flex: 1;
+  }
+  .faq-item[open] .faq-q,
+  .faq-item:hover .faq-q { color: white; }
+
+  .faq-chevron {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 0.25rem;
+    color: color-mix(in oklch, white 45%, transparent);
+    transition: transform 360ms var(--ease-emph), color 300ms ease;
+  }
+  .faq-item[open] .faq-chevron {
+    transform: rotate(180deg);
+    color: var(--color-teal);
+  }
+
+  @media (max-width: 640px) {
+    .faq-item { padding: 1.5rem 0; }
+    .faq-item[open] { padding: 1.5rem 0 2rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-orb { animation: none; }
+  }
+</style>

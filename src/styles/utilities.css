@@ -1,0 +1,73 @@
+/* Utilities -------------------------------------------------------- */
+
+/* Reusable disclosure animation (accordion with <details>).
+   Apply to any <details> block with an .u-disclosure-body child. */
+.u-disclosure-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 450ms var(--ease-emph);
+}
+
+details[open] > .u-disclosure-body {
+  grid-template-rows: 1fr;
+}
+
+.u-disclosure-body > * {
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 500ms ease 80ms,
+    transform 500ms ease 80ms;
+}
+
+details[open] > .u-disclosure-body > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hide default details marker */
+.u-disclosure-summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+.u-disclosure-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Teal pulsing dot (status / markers) */
+.u-dot {
+  display: inline-block;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--color-teal);
+  box-shadow: 0 0 10px color-mix(in oklch, var(--color-teal) 70%, transparent);
+}
+
+/* Container — clamps width + gutters */
+.u-container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter-sm);
+}
+
+@media (min-width: 768px) {
+  .u-container {
+    padding-inline: var(--gutter-lg);
+  }
+}
+
+/* Hairline divider */
+.u-hairline {
+  border-color: color-mix(in oklch, white 7%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .u-disclosure-body,
+  .u-disclosure-body > * {
+    transition: none;
+  }
+}

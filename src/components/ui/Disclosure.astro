@@ -1,0 +1,25 @@
+---
+/**
+ * Disclosure — <details> wrapper with animated open/close body.
+ * Provides two slots: `summary` and default (body).
+ *
+ * Uses global utilities: .u-disclosure-summary + .u-disclosure-body
+ */
+interface Props {
+  name?: string;
+  open?: boolean;
+  class?: string;
+}
+const { name, open = false, class: klass = "" } = Astro.props;
+---
+
+<details name={name} open={open} class:list={["group", klass]}>
+  <summary class="u-disclosure-summary">
+    <slot name="summary" />
+  </summary>
+  <div class="u-disclosure-body">
+    <div>
+      <slot />
+    </div>
+  </div>
+</details>

@@ -1,0 +1,134 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import Disclosure from "../ui/Disclosure.astro";
+import { services } from "../../content/site";
+---
+
+<section id="servicos" class="py-20 md:py-28 relative">
+  <div class="u-container">
+    <SectionHeader eyebrow="serviços" meta={`0${services.length} áreas`}>
+      o que construímos.
+    </SectionHeader>
+
+    <ul class="services-list">
+      {services.map((s, i) => (
+        <li>
+          <Disclosure name="services" open={i === 0} class="service">
+            <div slot="summary" class="service-row">
+              <span class="mono text-xs text-white/35 service-num">{s.num}</span>
+              <span class="display text-[clamp(1.5rem,4vw,2.75rem)] leading-tight service-title">
+                {s.title}
+              </span>
+              <span class="service-chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" class="w-full h-full">
+                  <path d="M3 8 L13 8 M8 3 L8 13" stroke="currentColor" stroke-width="1" fill="none" />
+                </svg>
+              </span>
+            </div>
+            <div class="service-body">
+              <p class="text-white/70 max-w-[58ch]">{s.lede}</p>
+              <ul class="service-entregas">
+                {s.entregas.map((e) => (
+                  <li>
+                    <span class="u-dot"></span>
+                    <span>{e}</span>
+                  </li>
+                ))}
+              </ul>
+              <p class="mono text-xs text-white/40 service-stack">{s.stack}</p>
+            </div>
+          </Disclosure>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .services-list > li {
+    border-top: 1px solid color-mix(in oklch, white 7%, transparent);
+  }
+  .services-list > li:last-child {
+    border-bottom: 1px solid color-mix(in oklch, white 7%, transparent);
+  }
+
+  .service {
+    position: relative;
+    padding: 0.9rem 0;
+    transition: background 400ms var(--ease-emph);
+  }
+  .service[open] {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--color-teal) 4%, transparent),
+      transparent 55%
+    );
+  }
+
+  .service-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 0.35rem 0;
+  }
+  .service-num {
+    letter-spacing: 0.18em;
+    font-size: 0.65rem;
+    color: color-mix(in oklch, var(--color-teal) 55%, transparent);
+  }
+  .service-title {
+    color: color-mix(in oklch, white 85%, transparent);
+    transition: color 300ms var(--ease-emph);
+    font-size: clamp(1.15rem, 2.4vw, 1.8rem) !important;
+    letter-spacing: -0.02em;
+  }
+  .service[open] .service-title,
+  .service:hover .service-title {
+    color: white;
+  }
+
+  .service-chevron {
+    width: 14px;
+    height: 14px;
+    color: color-mix(in oklch, white 40%, transparent);
+    transition: transform 360ms var(--ease-emph), color 300ms ease;
+  }
+  .service[open] .service-chevron {
+    transform: rotate(45deg);
+    color: var(--color-teal);
+  }
+
+  .service-body {
+    padding: 0.85rem 0 0.25rem 2.5rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .service-body > p {
+    font-size: 0.9rem;
+    color: color-mix(in oklch, white 65%, transparent);
+  }
+  .service-entregas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem 1.5rem;
+  }
+  .service-entregas li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: color-mix(in oklch, white 70%, transparent);
+    font-size: 0.85rem;
+  }
+  .service-stack {
+    padding-top: 0.5rem;
+    border-top: 1px dashed color-mix(in oklch, white 8%, transparent);
+    font-size: 0.6rem !important;
+    letter-spacing: 0.22em;
+  }
+
+  @media (max-width: 640px) {
+    .service-body { padding-left: 0; }
+    .service-entregas { grid-template-columns: 1fr; }
+  }
+</style>

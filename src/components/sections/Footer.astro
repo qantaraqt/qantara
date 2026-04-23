@@ -1,0 +1,120 @@
+---
+import Button from "../ui/Button.astro";
+import { site, nav } from "../../content/site";
+---
+
+<footer class="site-footer pt-20 md:pt-28 pb-8 relative overflow-hidden">
+  <div class="u-container">
+    <div class="grid grid-cols-12 gap-10 mb-16 md:mb-20">
+      <div class="col-span-12 md:col-span-8">
+        <p class="mono text-xs text-white/40 mb-5">próximo passo</p>
+        <h2 class="display text-[clamp(2.25rem,6vw,5rem)] leading-[0.95]">
+          <span class="block">vamos construir</span>
+          <span class="block">algo <em>vivo</em>.</span>
+        </h2>
+      </div>
+      <div class="col-span-12 md:col-span-4 flex items-end">
+        <Button href={`mailto:${site.email}?subject=Projeto%20qantara`} variant="primary" class="w-full md:w-auto justify-center">
+          iniciar conversa ↗
+        </Button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-10 pt-10 border-t border-white/5">
+      <div>
+        <p class="mono text-[0.65rem] text-white/35 mb-4">sitemap</p>
+        <ul class="flex flex-col gap-2 text-sm text-white/65">
+          {nav.map((n) => (
+            <li><a href={n.href} class="hover:text-white transition-colors">{n.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <p class="mono text-[0.65rem] text-white/35 mb-4">contato</p>
+        <ul class="flex flex-col gap-2 text-sm text-white/65">
+          <li>
+            <a href={`mailto:${site.email}?subject=Projeto%20qantara`} class="hover:text-white transition-colors break-all">
+              {site.email}
+            </a>
+          </li>
+          <li>
+            <a href={`https://wa.me/${site.whatsapp}`} class="hover:text-white transition-colors">
+              whatsapp · {site.whatsappDisplay}
+            </a>
+          </li>
+          <li class="text-white/45">resposta em até 24h</li>
+        </ul>
+      </div>
+
+      <div class="col-span-2 md:col-span-1">
+        <p class="mono text-[0.65rem] text-white/35 mb-4">operação</p>
+        <p class="text-sm text-white/65">Vitória · Espírito Santo</p>
+        <p class="text-xs text-white/40 mt-1">independente · pt · es · en</p>
+      </div>
+    </div>
+
+    <div class="word-mark-wrap" aria-hidden="true">
+      <span class="word-mark">qantara</span>
+    </div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-white/5">
+      <p class="mono text-[0.65rem] text-white/35">
+        © {site.year} · {site.owner}
+      </p>
+      <p class="mono text-[0.65rem] text-white/35">
+        {site.domain}
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer em {
+    font-style: normal;
+    color: var(--color-teal);
+  }
+
+  .word-mark-wrap {
+    position: relative;
+    margin: 4rem -1rem 0;
+    padding: 2rem 0 0;
+    border-top: 1px solid color-mix(in oklch, white 5%, transparent);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .word-mark-wrap::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 2rem; bottom: 0;
+    background: radial-gradient(
+      ellipse 60% 80% at 50% 100%,
+      color-mix(in oklch, var(--color-teal) 10%, transparent),
+      transparent 70%
+    );
+    z-index: -1;
+  }
+  .word-mark {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(3.5rem, 18vw, 13rem);
+    letter-spacing: -0.055em;
+    line-height: 0.8;
+    text-align: center;
+    color: color-mix(in oklch, white 8%, transparent);
+    user-select: none;
+    font-variation-settings: "wdth" 92, "opsz" 48;
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklch, white 14%, transparent) 0%,
+      color-mix(in oklch, var(--color-teal) 22%, transparent) 70%,
+      transparent 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0;
+    padding-bottom: 0.3em;
+  }
+</style>

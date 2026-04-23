@@ -1,0 +1,30 @@
+/* Design tokens ---------------------------------------------------- */
+@theme {
+  /* Color — oklch for richer gradients and perceptual uniformity */
+  --color-ink: oklch(0.14 0.015 190);
+  --color-ink-deep: oklch(0.09 0.01 200);
+  --color-mist: oklch(0.96 0.008 90);
+  --color-teal: oklch(0.82 0.14 172);
+  --color-teal-soft: oklch(0.72 0.10 172);
+  --color-cobalt: oklch(0.68 0.09 228);
+  --color-line: oklch(0.28 0.015 195);
+
+  /* Type */
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-sans: "Satoshi", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Layout */
+  --container: 1200px;
+  --gutter-sm: 1.25rem;   /* 20px */
+  --gutter-lg: 2rem;      /* 32px */
+
+  /* Motion */
+  --ease-emph: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-soft: cubic-bezier(0.25, 0.8, 0.3, 1);
+}
+
+:root {
+  color-scheme: dark;
+  --bridge-glow: oklch(0.82 0.14 172 / 0.55);
+}

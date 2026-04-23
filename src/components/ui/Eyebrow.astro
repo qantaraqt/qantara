@@ -1,0 +1,18 @@
+---
+interface Props {
+  label: string;
+  meta?: string;
+  class?: string;
+}
+const { label, meta, class: klass = "" } = Astro.props;
+---
+
+<div class:list={["flex items-baseline gap-4", klass]}>
+  <p class="mono">{label}</p>
+  {meta && (
+    <>
+      <div class="flex-1 h-px bg-white/5"></div>
+      <p class="mono text-white/35">{meta}</p>
+    </>
+  )}
+</div>
