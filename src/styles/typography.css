@@ -1,8 +1,8 @@
 /* Typography ------------------------------------------------------- */
 html,
 body {
-  background: var(--color-ink-deep);
-  color: var(--color-mist);
+  background: var(--bg);
+  color: var(--fg);
   font-family: var(--font-sans);
   font-feature-settings: "ss01", "cv11", "calt", "liga", "kern";
   font-variant-numeric: tabular-nums;
@@ -19,7 +19,7 @@ html {
 
 ::selection {
   background: color-mix(in oklch, var(--color-teal) 45%, transparent);
-  color: var(--color-mist);
+  color: var(--bg);
 }
 
 .display {
@@ -43,12 +43,12 @@ html {
   font-size: 0.68rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: color-mix(in oklch, var(--color-mist) 45%, transparent);
+  color: color-mix(in oklch, var(--fg) 55%, transparent);
   font-weight: 500;
 }
 
 .lede {
-  color: color-mix(in oklch, white 65%, transparent);
+  color: color-mix(in oklch, var(--fg) 65%, transparent);
   font-size: 1.02rem;
   line-height: 1.55;
 }

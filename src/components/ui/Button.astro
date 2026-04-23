@@ -19,10 +19,8 @@ const target = external ? "_blank" : undefined;
     rel={rel}
     target={target}
     class:list={[
-      "group inline-flex items-center gap-2.5 rounded-full",
-      "bg-[var(--color-teal)] text-[var(--color-ink-deep)]",
+      "btn-primary group inline-flex items-center gap-2.5 rounded-full",
       "px-5 md:px-6 py-2.5 md:py-3 text-[0.92rem] font-medium",
-      "hover:bg-white transition-colors",
       klass,
     ]}
   >
@@ -35,8 +33,8 @@ const target = external ? "_blank" : undefined;
     rel={rel}
     target={target}
     class:list={[
-      "inline-flex items-center gap-2 text-[0.92rem]",
-      "text-white/55 hover:text-white transition-colors px-2 py-2.5",
+      "btn-ghost inline-flex items-center gap-2 text-[0.92rem]",
+      "px-2 py-2.5",
       klass,
     ]}
   >
@@ -44,3 +42,48 @@ const target = external ? "_blank" : undefined;
     {external && <span aria-hidden="true">↗</span>}
   </a>
 )}
+
+<style>
+  .btn-primary {
+    background: var(--color-teal);
+    color: var(--color-ink-deep);
+    box-shadow:
+      0 1px 0 color-mix(in oklch, #ffffff 35%, transparent) inset,
+      0 0 0 0 color-mix(in oklch, var(--color-teal) 0%, transparent),
+      0 10px 30px -12px color-mix(in oklch, var(--color-teal) 55%, transparent);
+    transition:
+      background 300ms var(--ease-emph),
+      box-shadow 400ms var(--ease-emph),
+      transform 300ms var(--ease-emph);
+  }
+  .btn-primary:hover {
+    background: color-mix(in oklch, var(--color-teal) 92%, white);
+    box-shadow:
+      0 1px 0 color-mix(in oklch, #ffffff 45%, transparent) inset,
+      0 0 0 6px color-mix(in oklch, var(--color-teal) 18%, transparent),
+      0 18px 40px -14px color-mix(in oklch, var(--color-teal) 70%, transparent);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 3px var(--bg),
+      0 0 0 5px var(--color-teal);
+  }
+
+  .btn-ghost {
+    color: color-mix(in oklch, var(--fg) 65%, transparent);
+    border-radius: 999px;
+    transition: color 300ms var(--ease-emph), background 300ms var(--ease-emph);
+  }
+  .btn-ghost:hover {
+    color: var(--fg);
+    background: color-mix(in oklch, var(--fg) 5%, transparent);
+  }
+  .btn-ghost:focus-visible {
+    outline: none;
+    color: var(--fg);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px color-mix(in oklch, var(--color-teal) 55%, transparent);
+  }
+</style>

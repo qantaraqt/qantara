@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Header from "../components/sections/Header.astro";
+import ThemeToggle from "../components/ui/ThemeToggle.astro";
 
 interface Props {
   title?: string;
@@ -8,8 +9,8 @@ interface Props {
 }
 
 const {
-  title = "qantara · a ponte entre tecnologia e possibilidades",
-  description = "Estudio de engenharia de software em Vitória/ES. Sistemas web, infraestrutura e automação — feitos à mão, com rigor.",
+  title = "Qantara · a ponte entre tecnologia e possibilidades",
+  description = "Estúdio independente de engenharia de software. Sistemas web sob medida, segurança e antifraude, infraestrutura e automação — feitos à mão, com rigor.",
 } = Astro.props;
 
 const canonical = "https://qantara.cloud";
@@ -22,14 +23,32 @@ const canonical = "https://qantara.cloud";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0a1518" />
+    <meta name="theme-color" content="#f3f0e8" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- Performance hints -->
+    <link rel="preload" as="image" href="/bridge.avif" type="image/avif" fetchpriority="high" />
+    <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
+
+    <!-- Theme bootstrap — set data-theme before paint to avoid FOUC -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var theme = saved === "dark" || saved === "light" ? saved : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (_) {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
+
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="qantara" />
+    <meta property="og:site_name" content="Qantara" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -39,7 +58,7 @@ const canonical = "https://qantara.cloud";
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1024" />
     <meta property="og:image:height" content="1024" />
-    <meta property="og:image:alt" content="qantara · a ponte entre tecnologia e possibilidades" />
+    <meta property="og:image:alt" content="Qantara · a ponte entre tecnologia e possibilidades" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -54,8 +73,10 @@ const canonical = "https://qantara.cloud";
     <div class="ambient" aria-hidden="true"></div>
     <div class="ambient-grain" aria-hidden="true"></div>
 
+    <!-- hero-human-bar removed as requested -->
     <Header />
     <slot />
+    <ThemeToggle />
 
     <style>
       .skip-link {
@@ -74,6 +95,31 @@ const canonical = "https://qantara.cloud";
         transition: top 200ms ease;
       }
       .skip-link:focus { top: 1rem; }
+
+      .hero-human-bar {
+        width: 100%;
+        background: linear-gradient(90deg, color-mix(in oklch, var(--color-teal) 12%, transparent) 0%, transparent 100%);
+        color: var(--fg);
+        padding: 0.65rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 1.08rem;
+        letter-spacing: 0.01em;
+        font-weight: 500;
+        border-bottom: 1px solid color-mix(in oklch, var(--color-teal) 10%, transparent);
+        box-shadow: 0 2px 12px -8px color-mix(in oklch, var(--color-teal) 10%, transparent);
+        z-index: 50;
+        position: relative;
+      }
+      .hero-human-msg {
+        color: color-mix(in oklch, var(--color-teal) 80%, var(--fg) 20%);
+        text-shadow: 0 1px 8px color-mix(in oklch, var(--color-teal) 18%, transparent);
+      }
+      @media (max-width: 600px) {
+        .hero-human-bar { font-size: 0.98rem; padding: 0.5rem 0; }
+      }
     </style>
   </body>
 </html>

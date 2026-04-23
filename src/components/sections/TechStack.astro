@@ -13,7 +13,18 @@ const row = [...stack, ...stack];
   <div class="marquee" aria-hidden="true">
     <ul class="marquee-track">
       {row.map((t) => (
-        <li class="marquee-item">{t}</li>
+        <li class="marquee-item">
+          <img
+            src={`https://cdn.simpleicons.org/${t.slug}`}
+            alt=""
+            width="28"
+            height="28"
+            loading="lazy"
+            decoding="async"
+            class:list={["marquee-logo", { "marquee-logo--mono": t.mono }]}
+          />
+          <span>{t.name}</span>
+        </li>
       ))}
     </ul>
   </div>
@@ -34,24 +45,60 @@ const row = [...stack, ...stack];
 
   .marquee-track {
     display: flex;
-    gap: 3rem;
+    align-items: center;
+    gap: 0;
     width: max-content;
-    animation: marquee 48s linear infinite;
+    animation: marquee 70s linear infinite;
+    padding: 0.5rem 0;
   }
   .marquee:hover .marquee-track {
     animation-play-state: paused;
   }
 
   .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0 1.75rem;
     font-family: var(--font-display);
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
     font-weight: 500;
-    letter-spacing: -0.02em;
-    color: color-mix(in oklch, white 65%, transparent);
+    letter-spacing: -0.015em;
+    color: color-mix(in oklch, var(--fg) 75%, transparent);
     white-space: nowrap;
+    position: relative;
   }
-  .marquee-item:nth-child(3n) {
-    color: var(--color-teal);
+  .marquee-item + .marquee-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: color-mix(in oklch, var(--color-teal) 55%, transparent);
+  }
+  .marquee-item:hover {
+    color: var(--fg);
+  }
+  .marquee-logo {
+    width: 1.2em;
+    height: 1.2em;
+    object-fit: contain;
+    flex-shrink: 0;
+    opacity: 0.85;
+    transition: opacity 300ms ease, transform 400ms var(--ease-emph);
+  }
+  .marquee-item:hover .marquee-logo {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  /* Monochrome logos (Next.js, Astro, Linux, Framer…) are black by default.
+     Invert them on dark theme so they become white. */
+  :root[data-theme="dark"] .marquee-logo--mono {
+    filter: invert(1) brightness(1.1);
   }
 
   @keyframes marquee {

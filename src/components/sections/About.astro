@@ -1,0 +1,154 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import { site } from "../../content/site";
+---
+
+<section id="sobre" class="pt-10 md:pt-16 pb-20 md:pb-28 relative">
+  <div class="u-container grid grid-cols-12 gap-y-10 md:gap-10 items-start">
+    <div class="col-span-12 md:col-span-4">
+      <div class="about-mono" aria-hidden="true">
+        <svg viewBox="0 0 28 32" class="about-mark">
+          <path
+            d="M6 2 L22 2 L26 6 L26 22 L22 26 L6 26 L2 22 L2 6 Z"
+            fill="none"
+            stroke="var(--color-teal)"
+            stroke-width="2.25"
+            stroke-linejoin="miter"
+          />
+          <line
+            x1="20" y1="20"
+            x2="27" y2="30"
+            stroke="var(--color-teal)"
+            stroke-width="2.5"
+            stroke-linecap="square"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <div class="col-span-12 md:col-span-8">
+      <SectionHeader eyebrow="sobre" meta="Qantara">
+        A ponte entre sua empresa e a <em>tecnologia</em>.
+      </SectionHeader>
+
+      <div class="about-body">
+        <p>
+          <strong>Qantara</strong> é um estúdio independente de engenharia de
+          software. Construímos sistemas web sob medida, infraestrutura segura
+          e automações — com foco, método e sem intermediários.
+        </p>
+        <p>
+          Cada projeto é tocado por uma única pessoa do escopo ao deploy,
+          então você <strong>conversa direto com quem constrói</strong>,
+          recebe respostas técnicas reais e nunca fica preso a camadas de
+          gerenciamento.
+        </p>
+        <p>
+          Além de sistemas web, temos experiência forte em
+          <strong>segurança, antifraude e proteção de pagamentos</strong> —
+          checkouts resistentes, detecção de abuso, auditoria de acesso e
+          endurecimento de infraestrutura em produção.
+        </p>
+        <p>
+          Grande parte dos sistemas que entregamos rodam sob NDA e não aparecem
+          publicamente. O que você vê abaixo é um resumo sem nomes — os
+          detalhes, contexto e números conversamos em particular.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-mono {
+    aspect-ratio: 1 / 1;
+    max-width: 14rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid color-mix(in oklch, var(--color-teal) 35%, transparent);
+    border-radius: 18px;
+    background:
+      radial-gradient(
+        circle at 30% 25%,
+        color-mix(in oklch, var(--color-teal) 18%, transparent),
+        transparent 55%
+      ),
+      color-mix(in oklch, var(--bg) 85%, transparent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklch, var(--color-teal) 25%, transparent),
+      0 30px 80px -30px color-mix(in oklch, var(--color-teal) 35%, transparent);
+  }
+  .about-mono span {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-teal);
+    font-variation-settings: "wdth" 92, "opsz" 48;
+    letter-spacing: -0.04em;
+    text-shadow: 0 0 40px color-mix(in oklch, var(--color-teal) 40%, transparent);
+  }
+  .about-mark {
+    width: 52%;
+    height: auto;
+    filter:
+      drop-shadow(0 0 12px color-mix(in oklch, var(--color-teal) 45%, transparent))
+      drop-shadow(0 0 28px color-mix(in oklch, var(--color-teal) 22%, transparent));
+    animation: about-mark-pulse 4.2s ease-in-out infinite;
+  }
+  @keyframes about-mark-pulse {
+    0%, 100% { filter: drop-shadow(0 0 10px color-mix(in oklch, var(--color-teal) 35%, transparent)); }
+    50%      { filter: drop-shadow(0 0 18px color-mix(in oklch, var(--color-teal) 65%, transparent))
+                       drop-shadow(0 0 32px color-mix(in oklch, var(--color-teal) 25%, transparent)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .about-mark { animation: none; }
+  }
+
+  .about-body {
+    display: grid;
+    gap: 1rem;
+    max-width: 58ch;
+    margin-top: 1.25rem;
+  }
+  .about-body p {
+    color: color-mix(in oklch, var(--fg) 75%, transparent);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .about-body strong {
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  .about-facts {
+    margin-top: 2.25rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 10%, transparent);
+  }
+  @media (min-width: 900px) {
+    .about-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  .about-facts li {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .about-facts .mono {
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    color: color-mix(in oklch, var(--color-teal) 60%, transparent);
+  }
+  .about-facts li > span:last-child {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: color-mix(in oklch, var(--fg) 82%, transparent);
+  }
+
+  @media (max-width: 768px) {
+    .about-mono { max-width: 9rem; }
+    .about-facts { grid-template-columns: 1fr; }
+  }
+</style>

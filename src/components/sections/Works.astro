@@ -3,11 +3,17 @@ import SectionHeader from "../ui/SectionHeader.astro";
 import { works } from "../../content/site";
 ---
 
-<section id="trabalhos" class="py-20 md:py-28">
+<section id="trabalhos" class="section-vault py-20 md:py-28">
   <div class="u-container">
-    <SectionHeader eyebrow="trabalhos" meta="selecionados">
-      projetos recentes.
+    <SectionHeader eyebrow="trabalhos" meta="resumo anonimizado">
+      Projetos recentes.
     </SectionHeader>
+
+    <p class="works-note">
+      Os nomes dos clientes e detalhes técnicos são protegidos por NDA.
+      Abaixo, um resumo do que construímos — apresentamos mais detalhes no
+      WhatsApp, sob confidencialidade.
+    </p>
 
     <ul class="works-list">
       {works.map((w) => (
@@ -36,11 +42,19 @@ import { works } from "../../content/site";
 </section>
 
 <style>
+  .works-note {
+    max-width: 60ch;
+    margin: -0.5rem 0 2.25rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: color-mix(in oklch, var(--fg) 60%, transparent);
+  }
+
   .works-list > li {
-    border-top: 1px solid color-mix(in oklch, white 7%, transparent);
+    border-top: 1px solid color-mix(in oklch, var(--fg) 7%, transparent);
   }
   .works-list > li:last-child {
-    border-bottom: 1px solid color-mix(in oklch, white 7%, transparent);
+    border-bottom: 1px solid color-mix(in oklch, var(--fg) 7%, transparent);
   }
 
   .work-row {
@@ -74,14 +88,14 @@ import { works } from "../../content/site";
   }
 
   .work-title {
-    color: color-mix(in oklch, white 88%, transparent);
+    color: color-mix(in oklch, var(--fg) 88%, transparent);
     font-size: clamp(1.05rem, 2.2vw, 1.5rem) !important;
     letter-spacing: -0.02em;
   }
 
   .work-main > p {
     font-size: 0.85rem;
-    color: color-mix(in oklch, white 55%, transparent);
+    color: color-mix(in oklch, var(--fg) 55%, transparent);
     margin-top: 0.35rem !important;
   }
 
@@ -101,7 +115,7 @@ import { works } from "../../content/site";
     padding-top: 0.35rem;
     font-size: 0.65rem !important;
     letter-spacing: 0.18em;
-    color: color-mix(in oklch, white 40%, transparent) !important;
+    color: color-mix(in oklch, var(--fg) 40%, transparent) !important;
   }
 
   @media (max-width: 768px) {

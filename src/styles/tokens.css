@@ -24,7 +24,55 @@
   --ease-soft: cubic-bezier(0.25, 0.8, 0.3, 1);
 }
 
+/* ------------------------------------------------------------------
+   Theme system
+   - Default (no attribute) = light
+   - [data-theme="dark"] = dark
+
+   Strategy: define semantic tokens (--bg, --fg, --line) per theme.
+   We also remap --color-white → --fg so Tailwind utilities like
+   `text-white/60`, `border-white/5` adapt automatically (Tailwind v4
+   compiles them as color-mix using var(--color-white)).
+   We deliberately DO NOT touch --color-mist (it's the light page bg
+   and must stay light in both themes for gradients that hardcode it).
+------------------------------------------------------------------ */
 :root {
+  color-scheme: light;
+
+  /* Semantic */
+  --bg: oklch(0.975 0.006 85);
+  --bg-elev: #ffffff;
+  --fg: oklch(0.14 0.02 210);
+  --line: oklch(0.18 0.015 200);  /* same hue as fg, used at low alpha */
+  --bridge-glow: oklch(0.62 0.12 172 / 0.45);
+
+  /* Ambient aurora intensities (softer in light) */
+  --ambient-opacity: 0.4;
+  --ambient-mix: 7%;
+  --ambient-wash-a: 5%;
+  --ambient-wash-b: 4%;
+  --ambient-wash-top: 4%;
+  --grain-opacity: 0.045;
+
+  /* Tailwind color-* remap — make `text-white/X` read as dark-fg */
+  --color-white: var(--fg);
+}
+
+:root[data-theme="dark"] {
   color-scheme: dark;
+
+  --bg: oklch(0.11 0.012 210);
+  --bg-elev: oklch(0.15 0.015 205);
+  --fg: oklch(0.97 0.008 85);
+  --line: #ffffff;
   --bridge-glow: oklch(0.82 0.14 172 / 0.55);
+
+  --ambient-opacity: 0.7;
+  --ambient-mix: 18%;
+  --ambient-wash-a: 10%;
+  --ambient-wash-b: 8%;
+  --ambient-wash-top: 8%;
+  --grain-opacity: 0.09;
+
+  --color-white: #ffffff;
 }

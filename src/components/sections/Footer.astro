@@ -5,22 +5,24 @@ import { site, nav } from "../../content/site";
 
 <footer class="site-footer pt-20 md:pt-28 pb-8 relative overflow-hidden">
   <div class="u-container">
-    <div class="grid grid-cols-12 gap-10 mb-16 md:mb-20">
-      <div class="col-span-12 md:col-span-8">
-        <p class="mono text-xs text-white/40 mb-5">próximo passo</p>
-        <h2 class="display text-[clamp(2.25rem,6vw,5rem)] leading-[0.95]">
-          <span class="block">vamos construir</span>
-          <span class="block">algo <em>vivo</em>.</span>
-        </h2>
-      </div>
-      <div class="col-span-12 md:col-span-4 flex items-end">
-        <Button href={`mailto:${site.email}?subject=Projeto%20qantara`} variant="primary" class="w-full md:w-auto justify-center">
-          iniciar conversa ↗
-        </Button>
+    <div class="footer-cta">
+      <div class="grid grid-cols-12 gap-y-10 md:gap-10 items-end">
+        <div class="col-span-12 md:col-span-8">
+          <p class="mono text-xs text-white/50 mb-5">próximo passo</p>
+          <h2 class="display text-[clamp(2.25rem,6vw,5rem)] leading-[0.95] footer-cta-title">
+            <span class="block">Vamos construir</span>
+            <span class="block">algo <em>vivo</em>.</span>
+          </h2>
+        </div>
+        <div class="col-span-12 md:col-span-4 flex md:justify-end">
+          <Button href={`https://wa.me/${site.whatsapp}?text=Ol%C3%A1%20Qantara%2C%20vim%20do%20site`} variant="primary" external={true} class="w-full md:w-auto justify-center">
+            iniciar conversa
+          </Button>
+        </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-10 pt-10 border-t border-white/5">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-10 pt-16 mt-4 border-t border-white/5">
       <div>
         <p class="mono text-[0.65rem] text-white/35 mb-4">sitemap</p>
         <ul class="flex flex-col gap-2 text-sm text-white/65">
@@ -34,13 +36,13 @@ import { site, nav } from "../../content/site";
         <p class="mono text-[0.65rem] text-white/35 mb-4">contato</p>
         <ul class="flex flex-col gap-2 text-sm text-white/65">
           <li>
-            <a href={`mailto:${site.email}?subject=Projeto%20qantara`} class="hover:text-white transition-colors break-all">
-              {site.email}
+            <a href={`https://wa.me/${site.whatsapp}`} class="hover:text-white transition-colors">
+              whatsapp · {site.whatsappDisplay}
             </a>
           </li>
           <li>
-            <a href={`https://wa.me/${site.whatsapp}`} class="hover:text-white transition-colors">
-              whatsapp · {site.whatsappDisplay}
+            <a href={`mailto:${site.email}?subject=Projeto%20Qantara`} class="hover:text-white transition-colors break-all">
+              {site.email}
             </a>
           </li>
           <li class="text-white/45">resposta em até 24h</li>
@@ -49,18 +51,18 @@ import { site, nav } from "../../content/site";
 
       <div class="col-span-2 md:col-span-1">
         <p class="mono text-[0.65rem] text-white/35 mb-4">operação</p>
-        <p class="text-sm text-white/65">Vitória · Espírito Santo</p>
+        <p class="text-sm text-white/65">atendimento remoto global</p>
         <p class="text-xs text-white/40 mt-1">independente · pt · es · en</p>
       </div>
     </div>
 
     <div class="word-mark-wrap" aria-hidden="true">
-      <span class="word-mark">qantara</span>
+      <span class="word-mark">Qantara</span>
     </div>
 
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-white/5">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
       <p class="mono text-[0.65rem] text-white/35">
-        © {site.year} · {site.owner}
+        © {site.year} · {site.brand}
       </p>
       <p class="mono text-[0.65rem] text-white/35">
         {site.domain}
@@ -75,24 +77,81 @@ import { site, nav } from "../../content/site";
     color: var(--color-teal);
   }
 
+  /* Deep teal feature panel — dramatic close that works in both themes.
+     Reads as brand-colored against light, and as an elevated accent
+     against the dark page. */
+  .footer-cta {
+    position: relative;
+    background:
+      radial-gradient(
+        ellipse 90% 110% at 100% 0%,
+        oklch(0.38 0.09 172) 0%,
+        oklch(0.22 0.06 190) 55%,
+        oklch(0.16 0.04 200) 100%
+      );
+    color: oklch(0.97 0.01 160);
+    border-radius: 22px;
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+    margin-bottom: 4rem;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid color-mix(in oklch, var(--color-teal) 20%, transparent);
+    box-shadow:
+      0 1px 0 color-mix(in oklch, var(--color-teal) 25%, transparent) inset,
+      0 30px 80px -40px color-mix(in oklch, var(--color-teal) 55%, transparent),
+      0 20px 60px -30px color-mix(in oklch, oklch(0.15 0.05 195) 60%, transparent);
+  }
+  .footer-cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(
+        ellipse 55% 70% at 8% 110%,
+        color-mix(in oklch, var(--color-teal) 30%, transparent),
+        transparent 65%
+      );
+    pointer-events: none;
+  }
+  .footer-cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  .footer-cta-title em {
+    color: var(--color-teal);
+    font-style: normal;
+    text-shadow: 0 0 30px color-mix(in oklch, var(--color-teal) 40%, transparent);
+  }
+  .footer-cta .mono {
+    color: color-mix(in oklch, var(--color-teal) 75%, white);
+    letter-spacing: 0.22em;
+  }
+
   .word-mark-wrap {
     position: relative;
-    margin: 4rem -1rem 0;
-    padding: 2rem 0 0;
-    border-top: 1px solid color-mix(in oklch, white 5%, transparent);
-    overflow: hidden;
+    margin: 3rem -1rem 0;
+    padding: 0 0 0.05em;
+    overflow: visible;
     isolation: isolate;
   }
   .word-mark-wrap::before {
     content: "";
     position: absolute;
-    left: 0; right: 0; top: 2rem; bottom: 0;
+    left: -5%; right: -5%; top: -10%; bottom: -10%;
     background: radial-gradient(
-      ellipse 60% 80% at 50% 100%,
-      color-mix(in oklch, var(--color-teal) 10%, transparent),
+      ellipse 60% 75% at 50% 60%,
+      color-mix(in oklch, var(--color-teal) 16%, transparent),
       transparent 70%
     );
     z-index: -1;
+    pointer-events: none;
   }
   .word-mark {
     display: block;
@@ -100,21 +159,21 @@ import { site, nav } from "../../content/site";
     font-weight: 400;
     font-size: clamp(3.5rem, 18vw, 13rem);
     letter-spacing: -0.055em;
-    line-height: 0.8;
+    line-height: 1;
     text-align: center;
-    color: color-mix(in oklch, white 8%, transparent);
+    color: color-mix(in oklch, var(--fg) 8%, transparent);
     user-select: none;
     font-variation-settings: "wdth" 92, "opsz" 48;
     background: linear-gradient(
       180deg,
-      color-mix(in oklch, white 14%, transparent) 0%,
-      color-mix(in oklch, var(--color-teal) 22%, transparent) 70%,
-      transparent 100%
+      color-mix(in oklch, var(--fg) 28%, transparent) 0%,
+      color-mix(in oklch, var(--color-teal) 55%, transparent) 65%,
+      color-mix(in oklch, var(--color-teal) 22%, transparent) 100%
     );
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 0;
-    padding-bottom: 0.3em;
+    margin: 0;
+    padding: 0;
   }
 </style>

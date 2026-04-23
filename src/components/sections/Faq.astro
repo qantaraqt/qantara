@@ -4,28 +4,39 @@ import Disclosure from "../ui/Disclosure.astro";
 import { faqs } from "../../content/site";
 ---
 
-<section class="py-20 md:py-28 relative overflow-hidden">
+<section id="duvidas" class="py-20 md:py-28 relative overflow-hidden">
   <div class="faq-orb" aria-hidden="true"></div>
 
   <div class="u-container relative">
-    <div class="mx-auto max-w-[720px]">
-      <SectionHeader eyebrow="dúvidas" meta="respostas diretas">
-        perguntas frequentes.
-      </SectionHeader>
+    <div class="faq-shell">
+      <header class="faq-head">
+        <span class="mono faq-eyebrow">
+          <span class="u-dot"></span>
+          dúvidas
+        </span>
+        <h2 class="display faq-title">
+          O que costumam <em>perguntar</em>.
+        </h2>
+        <p class="faq-lede">
+          Respostas diretas para o que aparece com mais frequência antes
+          de começar um projeto. Se faltou algo, fale conosco.
+        </p>
+      </header>
 
       <ul class="faq-list">
       {faqs.map((f, i) => (
         <li>
           <Disclosure name="faq" open={i === 0} class="faq-item">
             <div slot="summary" class="faq-summary">
-              <span class="display text-base md:text-lg faq-q">{f.q}</span>
+              <span class="mono faq-num">{String(i + 1).padStart(2, "0")}</span>
+              <span class="display faq-q">{f.q}</span>
               <span class="faq-chevron" aria-hidden="true">
                 <svg viewBox="0 0 16 16" class="w-full h-full">
-                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" stroke-width="1.25" fill="none" />
+                  <path d="M3 8 L13 8 M8 3 L8 13" stroke="currentColor" stroke-width="1.1" fill="none" />
                 </svg>
               </span>
             </div>
-            <p class="text-white/65 text-[0.9rem] leading-relaxed pt-5 pb-1 pr-2 max-w-[56ch]">{f.a}</p>
+            <p class="faq-answer">{f.a}</p>
           </Disclosure>
         </li>
       ))}
@@ -35,72 +46,127 @@ import { faqs } from "../../content/site";
 </section>
 
 <style>
+  .faq-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    max-width: 1040px;
+    margin-inline: auto;
+  }
+  @media (min-width: 900px) {
+    .faq-shell {
+      grid-template-columns: 320px 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .faq-head { position: sticky; top: 7rem; }
+  }
+
+  .faq-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--color-teal) 70%, transparent);
+  }
+  .faq-title {
+    margin-top: 1.25rem;
+    font-size: clamp(1.85rem, 4.6vw, 2.85rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: color-mix(in oklch, var(--fg) 95%, transparent);
+  }
+  .faq-title em {
+    font-style: normal;
+    color: var(--color-teal);
+    text-shadow: 0 0 28px color-mix(in oklch, var(--color-teal) 40%, transparent);
+  }
+  .faq-lede {
+    margin-top: 1rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    max-width: 32ch;
+    color: color-mix(in oklch, var(--fg) 60%, transparent);
+  }
+
   .faq-orb {
     position: absolute;
-    left: 50%;
+    left: 70%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 80vmax;
-    height: 80vmax;
+    width: 60vmax;
+    height: 60vmax;
     background: radial-gradient(
       circle at center,
-      color-mix(in oklch, var(--color-teal) 10%, transparent) 0%,
-      transparent 40%
+      color-mix(in oklch, var(--color-teal) 12%, transparent) 0%,
+      transparent 45%
     );
     filter: blur(80px);
-    opacity: 0.35;
+    opacity: 0.4;
     pointer-events: none;
   }
 
-  .faq-list > li {
-    border-top: 1px solid color-mix(in oklch, white 10%, transparent);
-  }
-  .faq-list > li:last-child {
-    border-bottom: 1px solid color-mix(in oklch, white 10%, transparent);
+  .faq-list > li + li {
+    border-top: 1px solid color-mix(in oklch, var(--fg) 8%, transparent);
   }
 
   .faq-item {
-    padding: 1.75rem 0;
+    padding: 1.5rem 0;
     transition: padding 300ms var(--ease-emph);
   }
   .faq-item[open] {
-    padding: 2rem 0 2.25rem;
+    padding: 1.75rem 0 2rem;
   }
+
   .faq-summary {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1.25rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem 1.25rem;
+    align-items: baseline;
+  }
+
+  .faq-num {
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    color: color-mix(in oklch, var(--color-teal) 60%, transparent);
+    line-height: 1.6;
+  }
+
+  .faq-q {
+    color: color-mix(in oklch, var(--fg) 88%, transparent);
+    transition: color 300ms ease;
+    font-size: clamp(1.05rem, 2vw, 1.4rem);
+    line-height: 1.3;
     letter-spacing: -0.015em;
   }
-  .faq-q {
-    color: color-mix(in oklch, white 90%, transparent);
-    transition: color 300ms ease;
-    line-height: 1.35;
-    flex: 1;
-  }
   .faq-item[open] .faq-q,
-  .faq-item:hover .faq-q { color: white; }
+  .faq-item:hover .faq-q { color: var(--fg); }
 
   .faq-chevron {
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    margin-top: 0.25rem;
-    color: color-mix(in oklch, white 45%, transparent);
+    width: 14px;
+    height: 14px;
+    align-self: center;
+    color: color-mix(in oklch, var(--fg) 40%, transparent);
     transition: transform 360ms var(--ease-emph), color 300ms ease;
   }
   .faq-item[open] .faq-chevron {
-    transform: rotate(180deg);
+    transform: rotate(45deg);
     color: var(--color-teal);
   }
 
-  @media (max-width: 640px) {
-    .faq-item { padding: 1.5rem 0; }
-    .faq-item[open] { padding: 1.5rem 0 2rem; }
+  .faq-answer {
+    margin-top: 1rem;
+    margin-left: calc(2.2rem + 0.65rem); /* align under question, after num */
+    max-width: 60ch;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: color-mix(in oklch, var(--fg) 65%, transparent);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .faq-orb { animation: none; }
+  @media (max-width: 640px) {
+    .faq-summary { gap: 0.5rem 0.75rem; }
+    .faq-answer { margin-left: 0; margin-top: 0.85rem; }
   }
 </style>

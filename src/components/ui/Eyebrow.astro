@@ -7,12 +7,50 @@ interface Props {
 const { label, meta, class: klass = "" } = Astro.props;
 ---
 
-<div class:list={["flex items-baseline gap-4", klass]}>
-  <p class="mono">{label}</p>
+<div class:list={["eyebrow-row", klass]}>
+  <p class="mono eyebrow-label">{label}</p>
   {meta && (
     <>
-      <div class="flex-1 h-px bg-white/5"></div>
-      <p class="mono text-white/35">{meta}</p>
+      <div class="eyebrow-rule" aria-hidden="true"></div>
+      <p class="mono eyebrow-meta">{meta}</p>
     </>
   )}
 </div>
+
+<style>
+  .eyebrow-row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .eyebrow-rule {
+    flex: 0 0 2.75rem;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--color-teal) 55%, transparent),
+      color-mix(in oklch, var(--fg) 10%, transparent)
+    );
+  }
+  .eyebrow-label {
+    flex-shrink: 0;
+    color: color-mix(in oklch, var(--color-teal) 70%, transparent);
+  }
+  .eyebrow-meta {
+    color: color-mix(in oklch, var(--fg) 45%, transparent);
+    flex-shrink: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 520px) {
+    .eyebrow-row { gap: 0.65rem; }
+    .eyebrow-rule { display: none; }
+    .eyebrow-meta {
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+    }
+  }
+</style>

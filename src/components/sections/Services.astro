@@ -4,10 +4,10 @@ import Disclosure from "../ui/Disclosure.astro";
 import { services } from "../../content/site";
 ---
 
-<section id="servicos" class="py-20 md:py-28 relative">
+<section id="servicos" class="section-vault py-20 md:py-28 relative">
   <div class="u-container">
     <SectionHeader eyebrow="serviços" meta={`0${services.length} áreas`}>
-      o que construímos.
+      O que construímos.
     </SectionHeader>
 
     <ul class="services-list">
@@ -35,7 +35,24 @@ import { services } from "../../content/site";
                   </li>
                 ))}
               </ul>
-              <p class="mono text-xs text-white/40 service-stack">{s.stack}</p>
+              <div class="service-stack-row">
+                <ul class="service-stack-logos" aria-label="Tecnologias">
+                  {s.stackLogos.map((t) => (
+                    <li title={t.name}>
+                      <img
+                        src={`https://cdn.simpleicons.org/${t.slug}`}
+                        alt={t.name}
+                        width="20"
+                        height="20"
+                        loading="lazy"
+                        decoding="async"
+                        class:list={["service-stack-logo", { "service-stack-logo--mono": t.mono }]}
+                      />
+                      <span class="mono">{t.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </Disclosure>
         </li>
@@ -46,10 +63,10 @@ import { services } from "../../content/site";
 
 <style>
   .services-list > li {
-    border-top: 1px solid color-mix(in oklch, white 7%, transparent);
+    border-top: 1px solid color-mix(in oklch, var(--fg) 7%, transparent);
   }
   .services-list > li:last-child {
-    border-bottom: 1px solid color-mix(in oklch, white 7%, transparent);
+    border-bottom: 1px solid color-mix(in oklch, var(--fg) 7%, transparent);
   }
 
   .service {
@@ -78,7 +95,7 @@ import { services } from "../../content/site";
     color: color-mix(in oklch, var(--color-teal) 55%, transparent);
   }
   .service-title {
-    color: color-mix(in oklch, white 85%, transparent);
+    color: color-mix(in oklch, var(--fg) 85%, transparent);
     transition: color 300ms var(--ease-emph);
     font-size: clamp(1.15rem, 2.4vw, 1.8rem) !important;
     letter-spacing: -0.02em;
@@ -91,7 +108,7 @@ import { services } from "../../content/site";
   .service-chevron {
     width: 14px;
     height: 14px;
-    color: color-mix(in oklch, white 40%, transparent);
+    color: color-mix(in oklch, var(--fg) 40%, transparent);
     transition: transform 360ms var(--ease-emph), color 300ms ease;
   }
   .service[open] .service-chevron {
@@ -106,7 +123,7 @@ import { services } from "../../content/site";
   }
   .service-body > p {
     font-size: 0.9rem;
-    color: color-mix(in oklch, white 65%, transparent);
+    color: color-mix(in oklch, var(--fg) 65%, transparent);
   }
   .service-entregas {
     display: grid;
@@ -117,14 +134,52 @@ import { services } from "../../content/site";
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    color: color-mix(in oklch, white 70%, transparent);
+    color: color-mix(in oklch, var(--fg) 70%, transparent);
     font-size: 0.85rem;
   }
   .service-stack {
     padding-top: 0.5rem;
-    border-top: 1px dashed color-mix(in oklch, white 8%, transparent);
+    border-top: 1px dashed color-mix(in oklch, var(--fg) 8%, transparent);
     font-size: 0.6rem !important;
     letter-spacing: 0.22em;
+  }
+
+  .service-stack-row {
+    padding-top: 0.6rem;
+    border-top: 1px dashed color-mix(in oklch, var(--fg) 10%, transparent);
+  }
+  .service-stack-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.2rem;
+  }
+  .service-stack-logos li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--fg) 55%, transparent);
+    transition: color 300ms ease;
+  }
+  .service-stack-logos li:hover {
+    color: color-mix(in oklch, var(--fg) 90%, transparent);
+  }
+  .service-stack-logo {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    opacity: 0.85;
+    transition: opacity 300ms ease, transform 400ms var(--ease-emph);
+  }
+  .service-stack-logos li:hover .service-stack-logo {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  /* Services section is always vault/dark, so mono logos must invert. */
+  .service-stack-logo--mono {
+    filter: invert(1) brightness(1.1);
   }
 
   @media (max-width: 640px) {
