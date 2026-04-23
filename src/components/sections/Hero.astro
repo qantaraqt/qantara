@@ -21,19 +21,19 @@ import { site } from "../../content/site";
   <div class="hero-grain" aria-hidden="true"></div>
 
   <div class="u-container hero-inner">
-    <div class="hero-body">
-      <h1 class="display hero-title">
+    <div class="hero-body fadein-hero">
+      <h1 class="display hero-title fadein-hero">
         A ponte entre sua empresa<br class="hero-break" />
         e as <em>possibilidades</em>.
       </h1>
 
-      <p class="lede hero-lede">
+      <p class="lede hero-lede fadein-hero">
         Somos o <strong>Qantara</strong>, um estúdio de engenharia que
         transforma ideias em produtos digitais robustos. Escopo claro,
         prazos realistas e código que seu time pode manter.
       </p>
 
-      <div class="hero-actions">
+      <div class="hero-actions fadein-hero">
         <Button href={`https://wa.me/${site.whatsapp}?text=Ol%C3%A1%20Qantara%2C%20vim%20do%20site`} variant="primary" external={true}>
           Fale com a Qantara
         </Button>
@@ -49,8 +49,8 @@ import { site } from "../../content/site";
     color: var(--fg);
     isolation: isolate;
     overflow: hidden;
-    padding-top: 6.5rem;
-    padding-bottom: 3rem;
+    padding-top: 7.5rem;
+    padding-bottom: 3.5rem;
     min-height: 92svh;
     display: flex;
     flex-direction: column;
@@ -331,11 +331,35 @@ import { site } from "../../content/site";
       line-height: 1.05;
       letter-spacing: -0.025em;
       hyphens: manual;
+      margin-bottom: 1.2rem;
     }
     .hero-title em { display: inline; }
     .hero-lede {
       color: color-mix(in oklch, var(--fg) 88%, transparent);
       text-shadow: 0 1px 14px color-mix(in oklch, var(--bg) 60%, transparent);
+      margin-bottom: 2.1rem;
+    }
+    .hero-actions {
+      gap: 1.1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    @media (max-width: 600px) {
+      .hero {
+        padding-top: 5.2rem;
+        padding-bottom: 2.2rem;
+      }
+      .hero-title {
+        margin-bottom: 0.85rem;
+      }
+      .hero-lede {
+        margin-bottom: 1.3rem;
+      }
+      .hero-actions {
+        gap: 0.7rem;
+      }
     }
   }
 </style>
