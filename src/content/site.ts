@@ -5,12 +5,27 @@
 
 export const site = {
   brand: "Qantara",
-  domain: "qantara.cloud",
+  domain: "qantara.com.br",
   email: "andresmolinaroms@icloud.com",
   whatsapp: "5527992698323",
   whatsappDisplay: "+55 27 99269 8323",
-  tagline: "a ponte entre tecnologia e possibilidades",
+  tagline: "engenharia de software, atravessada à mão",
   year: 2026,
+} as const;
+
+/**
+ * WhatsApp deep-link helper. Encodes a contextual message so the
+ * conversation already lands with intent.
+ */
+export const wa = (msg: string) =>
+  `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(msg)}`;
+
+export const waMessages = {
+  hero:    "Olá, Andrés. Vim do site da Qantara para conversar sobre um projeto.",
+  footer:  "Olá, Andrés. Vim do site da Qantara e quero iniciar uma conversa.",
+  faq:     "Olá, Andrés. Vim da seção de dúvidas do site da Qantara. Tenho uma pergunta.",
+  service: (title: string) =>
+    `Olá, Andrés. Vim do site da Qantara. Tenho interesse em "${title}".`,
 } as const;
 
 export const nav = [
@@ -33,13 +48,13 @@ export interface Service {
 export const services: Service[] = [
   {
     num: "01",
-    title: "Sistemas sob medida",
-    lede: "Plataformas web completas, do primeiro wireframe ao deploy em produção.",
+    title: "Sistemas web sob medida",
+    lede: "Plataformas completas, do primeiro wireframe ao primeiro usuário em produção. Construídas para serem mantidas pelo seu time, ou pelo nosso.",
     entregas: [
-      "Painéis administrativos e dashboards",
-      "APIs REST e integrações entre sistemas",
-      "Autenticação, papéis e multi-tenant",
-      "Automação de processos internos",
+      "Painéis administrativos e dashboards em tempo real",
+      "APIs REST tipadas e integrações entre sistemas",
+      "Autenticação, papéis, multi-tenant e auditoria",
+      "Automação de processos internos e fluxos de aprovação",
     ],
     stack: "react · next.js · fastapi · postgresql",
     stackLogos: [
@@ -51,13 +66,13 @@ export const services: Service[] = [
   },
   {
     num: "02",
-    title: "E-commerce & vendas",
-    lede: "Lojas virtuais e sistemas de PDV que aguentam volume real.",
+    title: "E-commerce e pagamentos",
+    lede: "Lojas e checkouts que aguentam dia de Black Friday e auditoria fiscal. Pix, cartão, boleto, splits e antifraude integrados de origem.",
     entregas: [
-      "Checkout com Pix, boleto e cartão",
-      "Integrações com Mercado Pago, Stripe e Asaas",
-      "Gestão de estoque, produtos e pedidos",
-      "PDV para lojas físicas com impressão",
+      "Checkout com Pix, boleto, cartão e Apple/Google Pay",
+      "Mercado Pago, Stripe, Asaas, splits e estornos",
+      "Gestão de estoque, catálogo, pedidos e fiscal",
+      "PDV para loja física, com impressora e leitor",
     ],
     stack: "next.js · node · stripe · mercado pago",
     stackLogos: [
@@ -69,13 +84,13 @@ export const services: Service[] = [
   },
   {
     num: "03",
-    title: "Infraestrutura & deploy",
-    lede: "Servidores Linux robustos, seguros e monitorados.",
+    title: "Infraestrutura e deploy",
+    lede: "Servidores Linux que sobem rápido, escalam sem drama e dormem em paz à noite. Observáveis por padrão.",
     entregas: [
-      "Deploy em VPS com Nginx e SSL",
-      "Firewalls, backups e monitoramento",
-      "CI/CD, containers e observabilidade",
-      "Migração de sistemas legados",
+      "VPS Linux com Nginx, SSL e firewall",
+      "Backups automáticos, monitoramento e alertas",
+      "CI/CD, containers e blue-green deploy",
+      "Migração de sistemas legados sem downtime",
     ],
     stack: "linux · nginx · docker · cloudflare",
     stackLogos: [
@@ -87,13 +102,13 @@ export const services: Service[] = [
   },
   {
     num: "04",
-    title: "Segurança & antifraude",
-    lede: "Proteção de checkouts, detecção de abuso e endurecimento de sistemas em produção.",
+    title: "Segurança e antifraude",
+    lede: "Proteção operacional para sistemas que ganham dinheiro de verdade: checkouts, contas, APIs públicas e painéis administrativos.",
     entregas: [
-      "Antifraude para pagamentos e cadastros",
-      "Rate limiting, captchas e bloqueio de bots",
-      "Auditoria de acesso e logs estruturados",
-      "Hardening de Linux, APIs e banco de dados",
+      "Antifraude para pagamentos, cadastros e cupons",
+      "Rate limiting, captchas, fingerprint e bloqueio de bots",
+      "Auditoria de acesso, logs estruturados e SIEM básico",
+      "Hardening de Linux, APIs e PostgreSQL em produção",
     ],
     stack: "jwt · oauth · cloudflare · fail2ban",
     stackLogos: [
@@ -105,13 +120,13 @@ export const services: Service[] = [
   },
   {
     num: "05",
-    title: "Automação & APIs",
-    lede: "Bots, webhooks e integrações que trabalham enquanto você dorme.",
+    title: "Automação e integrações",
+    lede: "Bots, webhooks e jobs que trabalham enquanto seu time dorme. Confiáveis, retrocompatíveis e com retry à prova de falha.",
     entregas: [
-      "Bots WhatsApp e Telegram",
-      "Webhooks e jobs agendados",
-      "Integrações com ERPs e CRMs",
-      "Scraping e coleta de dados",
+      "Bots WhatsApp, Telegram e Discord (oficiais e não-oficiais)",
+      "Webhooks com retry, deduplicação e fila",
+      "Integrações com ERPs, CRMs e marketplaces",
+      "Coleta de dados, scraping e enriquecimento",
     ],
     stack: "python · node · redis · celery",
     stackLogos: [
@@ -162,23 +177,23 @@ export interface Step {
 export const method: Step[] = [
   {
     num: "01",
-    title: "Você nos conta",
-    desc: "Conversamos sobre seu negócio, objetivos e restrições. Escutamos antes de propor — cada projeto começa com contexto real, nunca com template.",
+    title: "Escuta",
+    desc: "Conversamos sobre o seu negócio antes de falar de tecnologia. Cada projeto começa por contexto real (restrições, time, orçamento, prazo), não por template.",
   },
   {
     num: "02",
-    title: "Propomos o plano",
-    desc: "Devolvemos escopo, prazos, arquitetura e orçamento claros. Você aprova antes que uma linha de código seja escrita.",
+    title: "Plano",
+    desc: "Devolvemos escopo, arquitetura, prazos e orçamento por escrito. Você aprova antes que uma linha de código seja escrita; mudanças de rumo são re-acordadas, não empurradas.",
   },
   {
     num: "03",
-    title: "Construímos juntos",
-    desc: "Desenvolvimento em sprints curtos com entregas validáveis. Comunicação direta com quem constrói, sem intermediários e sem caixa-preta.",
+    title: "Construção",
+    desc: "Sprints curtas, com algo navegável a cada duas semanas. Comunicação direta com quem escreve o código, sem PMs intermediários e sem tickets em cinco camadas.",
   },
   {
     num: "04",
-    title: "Publicamos e acompanhamos",
-    desc: "Deploy em produção, monitoramento ativo e suporte pós-lançamento. O sistema fica vivo, e a equipe fica disponível.",
+    title: "Travessia",
+    desc: "Deploy em produção, monitoramento ativo e suporte pós-lançamento. O sistema fica vivo; a gente continua disponível para o que ele virar.",
   },
 ];
 
@@ -193,9 +208,9 @@ export interface Work {
 export const works: Work[] = [
   {
     num: "01",
-    title: "Plataforma de verificação",
+    title: "Plataforma de verificação distribuída",
     summary:
-      "Sistema distribuído de validação com workers paralelos, painel admin em tempo real e WebSocket para resultados.",
+      "Sistema com workers paralelos em múltiplos nós, painel administrativo em tempo real, fila persistente e WebSocket para resultados sob carga. 50+ checagens simultâneas estáveis.",
     tags: ["FastAPI", "React", "Playwright", "PostgreSQL"],
     year: "2026",
   },
@@ -203,23 +218,23 @@ export const works: Work[] = [
     num: "02",
     title: "E-commerce de produtos digitais",
     summary:
-      "Loja com entrega automática, Pix e cartão, painel de pedidos e integração antifraude.",
+      "Loja com entrega automática pós-pagamento, Pix e cartão, painel de pedidos, antifraude integrado e split de comissões para revenda.",
     tags: ["Next.js", "Stripe", "Node"],
     year: "2025",
   },
   {
     num: "03",
-    title: "Sistema de PDV",
+    title: "PDV de varejo físico",
     summary:
-      "Controle de vendas, estoque, produtos e relatórios. Impressão de cupom e integração com balança.",
+      "Vendas, estoque, produtos, relatórios fiscais e impressão de cupom. Integrado a balança, leitor de código de barras e gaveta de dinheiro.",
     tags: ["Vue", "Laravel", "MySQL"],
     year: "2025",
   },
   {
     num: "04",
-    title: "Roteador de webhooks",
+    title: "Roteador de webhooks corporativo",
     summary:
-      "Roteador com retry, deduplicação e observabilidade para integração entre 6 sistemas.",
+      "Ponte entre seis sistemas internos: retry exponencial, deduplicação por idempotency key, dead-letter queue e observabilidade em todas as bordas.",
     tags: ["Python", "Redis", "Docker"],
     year: "2024",
   },
@@ -232,27 +247,31 @@ export interface Faq {
 
 export const faqs: Faq[] = [
   {
-    q: "Como a Qantara trabalha?",
-    a: "Somos um estúdio enxuto: cada projeto é tocado por uma única pessoa do escopo ao deploy, então você conversa direto com quem constrói, sem camadas de gerenciamento. Quando o projeto pede designer ou especialista pontual, colaboramos com parceiros de confiança sob nossa responsabilidade técnica.",
+    q: "Como o estúdio trabalha por dentro?",
+    a: "Somos enxutos por escolha: cada projeto é tocado por uma única pessoa, do escopo ao deploy. Você conversa direto com quem escreve o código, sem camadas de gerenciamento. Quando o projeto pede um especialista pontual (designer, redator, contador fiscal), colaboramos com parceiros de confiança, sob nossa responsabilidade técnica e contratual.",
   },
   {
     q: "Em quanto tempo um projeto fica pronto?",
-    a: "Depende do escopo. Projetos pequenos (landing, integração) saem em 1 a 3 semanas. Sistemas completos costumam ser entregues em sprints de 4 a 12 semanas, com validações intermediárias a cada duas semanas.",
+    a: "Depende do escopo, mas damos prazos honestos por escrito antes de começar. Projetos pequenos (landing, integração, automação) saem em 1 a 3 semanas. Sistemas completos costumam rodar em sprints de 4 a 12 semanas, com algo navegável a cada duas semanas. Você nunca espera dois meses para ver a primeira tela.",
   },
   {
-    q: "Atendem clientes internacionais?",
-    a: "Sim. Trabalhamos em português, espanhol e inglês, com reuniões online, comunicação assíncrona clara e ferramentas colaborativas — em qualquer fuso horário.",
+    q: "Atendem clientes fora do Brasil?",
+    a: "Sim. Trabalhamos em português, espanhol e inglês, em qualquer fuso. Reuniões síncronas curtas, comunicação assíncrona detalhada e ferramentas colaborativas que o seu time já usa. Pagamento internacional via transferência ou Wise, com nota fiscal regular.",
   },
   {
-    q: "Cuidam de design e desenvolvimento?",
-    a: "Cuidamos do desenvolvimento end-to-end: frontend, backend, banco e infraestrutura. Para design trabalhamos com parceiros ou adaptamos o Figma que o cliente já tenha.",
+    q: "Vocês cuidam de design também?",
+    a: "Cuidamos do desenvolvimento end-to-end: frontend, backend, banco e infraestrutura. Para design de interface trabalhamos com parceiros estabelecidos, ou implementamos o Figma que o seu time já tenha, com fidelidade pixel-perfect.",
   },
   {
     q: "Como funciona o pagamento?",
-    a: "Dividimos em marcos: sinal ao iniciar, parcelas intermediárias vinculadas a entregas e ajuste final no deploy. Sem pagamento integral antes de ver o sistema rodando.",
+    a: "Em marcos, sempre. Sinal ao iniciar, parcelas intermediárias atreladas a entregas validáveis e ajuste final no deploy em produção. Nada de pagamento integral antes de ver o sistema rodando. Esse é o nosso jeito de manter o incentivo certo dos dois lados.",
   },
   {
     q: "Há suporte depois do lançamento?",
-    a: "Sim. Oferecemos planos mensais de manutenção, monitoramento e melhorias contínuas — ou suporte pontual por hora, conforme a necessidade.",
+    a: "Sim. Oferecemos planos mensais de manutenção (monitoramento, ajustes, melhorias contínuas) ou suporte por hora pontual, com SLA claro. Sistema entregue não é sistema abandonado: a equipe que construiu continua disponível.",
+  },
+  {
+    q: "Trabalham com NDA?",
+    a: "Sim, e por padrão. Boa parte dos projetos que entregamos roda sob NDA recíproco. Detalhes de clientes, arquitetura e números só conversamos depois do acordo assinado.",
   },
 ];

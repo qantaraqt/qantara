@@ -1,7 +1,7 @@
 ---
 import SectionHeader from "../ui/SectionHeader.astro";
 import Disclosure from "../ui/Disclosure.astro";
-import { services } from "../../content/site";
+import { services, wa, waMessages } from "../../content/site";
 ---
 
 <section id="servicos" class="section-vault py-20 md:py-28 relative">
@@ -53,6 +53,14 @@ import { services } from "../../content/site";
                   ))}
                 </ul>
               </div>
+              <a
+                href={wa(waMessages.service(s.title))}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="service-cta mono"
+              >
+                conversar sobre {s.title.toLowerCase()} →
+              </a>
             </div>
           </Disclosure>
         </li>
@@ -185,5 +193,24 @@ import { services } from "../../content/site";
   @media (max-width: 640px) {
     .service-body { padding-left: 0; }
     .service-entregas { grid-template-columns: 1fr; }
+  }
+
+  .service-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--color-teal) 75%, transparent);
+    border-bottom: 1px dashed color-mix(in oklch, var(--color-teal) 35%, transparent);
+    padding-bottom: 2px;
+    width: fit-content;
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+  .service-cta:hover {
+    color: var(--color-teal);
+    border-color: color-mix(in oklch, var(--color-teal) 70%, transparent);
   }
 </style>

@@ -6,53 +6,60 @@ import { site } from "../../content/site";
 <section id="sobre" class="pt-10 md:pt-16 pb-20 md:pb-28 relative">
   <div class="u-container grid grid-cols-12 gap-y-10 md:gap-10 items-start">
     <div class="col-span-12 md:col-span-4">
-      <div class="about-mono" aria-hidden="true">
-        <svg viewBox="0 0 28 32" class="about-mark">
-          <path
-            d="M6 2 L22 2 L26 6 L26 22 L22 26 L6 26 L2 22 L2 6 Z"
-            fill="none"
-            stroke="var(--color-teal)"
-            stroke-width="2.25"
-            stroke-linejoin="miter"
+      <figure class="about-portrait">
+        <div class="about-portrait-frame">
+          <img
+            src="/andres.jpeg"
+            alt="Andrés Molina, fundador da Qantara"
+            width="880"
+            height="1100"
+            loading="lazy"
+            decoding="async"
           />
-          <line
-            x1="20" y1="20"
-            x2="27" y2="30"
-            stroke="var(--color-teal)"
-            stroke-width="2.5"
-            stroke-linecap="square"
-          />
-        </svg>
-      </div>
+          <span class="about-portrait-corner about-portrait-corner--tl" aria-hidden="true"></span>
+          <span class="about-portrait-corner about-portrait-corner--tr" aria-hidden="true"></span>
+          <span class="about-portrait-corner about-portrait-corner--bl" aria-hidden="true"></span>
+          <span class="about-portrait-corner about-portrait-corner--br" aria-hidden="true"></span>
+        </div>
+        <figcaption class="about-meta">
+          <p class="about-name">Andrés Molina</p>
+          <p class="mono about-role">fundador · engenheiro de software empreendedor</p>
+          <p class="mono about-locale">Vitória/ES · Brasil</p>
+          <ul class="about-links" aria-label="Links">
+            <li><a href="https://github.com/andryus" target="_blank" rel="noopener noreferrer">github</a></li>
+            <li><a href="mailto:andresmolinaroms@icloud.com">e-mail</a></li>
+          </ul>
+        </figcaption>
+      </figure>
     </div>
 
     <div class="col-span-12 md:col-span-8">
-      <SectionHeader eyebrow="sobre" meta="Qantara">
-        A ponte entre sua empresa e a <em>tecnologia</em>.
+      <SectionHeader eyebrow="sobre" meta="estúdio independente">
+        Uma ponte curta entre o seu negócio e o <em>código</em>.
       </SectionHeader>
 
       <div class="about-body">
         <p>
           <strong>Qantara</strong> é um estúdio independente de engenharia de
           software. Construímos sistemas web sob medida, infraestrutura segura
-          e automações — com foco, método e sem intermediários.
+          e automações, com método, foco e sem terceirizar o que importa.
         </p>
         <p>
-          Cada projeto é tocado por uma única pessoa do escopo ao deploy,
-          então você <strong>conversa direto com quem constrói</strong>,
-          recebe respostas técnicas reais e nunca fica preso a camadas de
-          gerenciamento.
+          Cada projeto é tocado por uma única pessoa do escopo ao deploy.
+          Você <strong>conversa direto com quem escreve o código</strong>,
+          recebe respostas técnicas no mesmo dia e nunca depende de uma
+          camada de gerenciamento para entender o que está sendo construído.
         </p>
         <p>
-          Além de sistemas web, temos experiência forte em
-          <strong>segurança, antifraude e proteção de pagamentos</strong> —
-          checkouts resistentes, detecção de abuso, auditoria de acesso e
-          endurecimento de infraestrutura em produção.
+          Trabalhamos forte em
+          <strong>segurança e antifraude</strong>: checkouts endurecidos,
+          detecção de abuso em pagamentos e cadastros, hardening de
+          infraestrutura e auditoria de acesso em produção real, com volume.
         </p>
         <p>
-          Grande parte dos sistemas que entregamos rodam sob NDA e não aparecem
-          publicamente. O que você vê abaixo é um resumo sem nomes — os
-          detalhes, contexto e números conversamos em particular.
+          Boa parte do que entregamos roda sob NDA e não aparece em vitrine.
+          O que está abaixo é um resumo desidentificado. Os números, o
+          contexto e o pós-mortem honesto a gente conversa em particular.
         </p>
       </div>
     </div>
@@ -60,49 +67,114 @@ import { site } from "../../content/site";
 </section>
 
 <style>
-  .about-mono {
-    aspect-ratio: 1 / 1;
-    max-width: 14rem;
+  .about-portrait {
+    margin: 0;
+    max-width: 16rem;
     display: grid;
-    place-items: center;
-    border: 1px solid color-mix(in oklch, var(--color-teal) 35%, transparent);
-    border-radius: 18px;
+    gap: 1.1rem;
+  }
+
+  .about-portrait-frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklch, var(--color-teal) 30%, transparent);
+    background: color-mix(in oklch, var(--bg) 85%, transparent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklch, var(--color-teal) 22%, transparent),
+      0 30px 80px -30px color-mix(in oklch, var(--color-teal) 32%, transparent);
+    isolation: isolate;
+  }
+  .about-portrait-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+    /* Subtle desaturation that warms toward color on hover.
+       Keeps the cyber/technical mood without going full B&W. */
+    filter: grayscale(0.35) contrast(1.04) brightness(0.96);
+    transition: filter 600ms var(--ease-emph);
+  }
+  .about-portrait-frame::after {
+    /* Soft teal vignette so the photo "belongs" to the brand */
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
     background:
       radial-gradient(
-        circle at 30% 25%,
-        color-mix(in oklch, var(--color-teal) 18%, transparent),
-        transparent 55%
+        ellipse 70% 60% at 50% 110%,
+        color-mix(in oklch, var(--color-teal) 22%, transparent),
+        transparent 65%
       ),
-      color-mix(in oklch, var(--bg) 85%, transparent);
-    box-shadow:
-      inset 0 1px 0 color-mix(in oklch, var(--color-teal) 25%, transparent),
-      0 30px 80px -30px color-mix(in oklch, var(--color-teal) 35%, transparent);
+      linear-gradient(
+        180deg,
+        transparent 55%,
+        color-mix(in oklch, var(--bg) 35%, transparent) 100%
+      );
+    mix-blend-mode: screen;
+    opacity: 0.85;
   }
-  .about-mono span {
+  .about-portrait-frame:hover img {
+    filter: grayscale(0) contrast(1.05) brightness(1);
+  }
+
+  /* Tiny corner ticks — same vocabulary as deck-line / scanner */
+  .about-portrait-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--color-teal);
+    pointer-events: none;
+    opacity: 0.85;
+  }
+  .about-portrait-corner--tl { top: 8px;    left: 8px;    border-right: 0; border-bottom: 0; }
+  .about-portrait-corner--tr { top: 8px;    right: 8px;   border-left: 0;  border-bottom: 0; }
+  .about-portrait-corner--bl { bottom: 8px; left: 8px;    border-right: 0; border-top: 0; }
+  .about-portrait-corner--br { bottom: 8px; right: 8px;   border-left: 0;  border-top: 0; }
+
+  .about-meta {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .about-name {
     font-family: var(--font-display);
-    font-size: clamp(4rem, 10vw, 8rem);
-    font-weight: 400;
-    line-height: 1;
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+  .about-role,
+  .about-locale {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--fg) 55%, transparent);
+  }
+  .about-role {
+    color: color-mix(in oklch, var(--color-teal) 70%, transparent);
+  }
+  .about-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    list-style: none;
+    padding: 0;
+  }
+  .about-links a {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: lowercase;
+    color: color-mix(in oklch, var(--fg) 70%, transparent);
+    border-bottom: 1px dashed color-mix(in oklch, var(--color-teal) 30%, transparent);
+    padding-bottom: 2px;
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+  .about-links a:hover {
     color: var(--color-teal);
-    font-variation-settings: "wdth" 92, "opsz" 48;
-    letter-spacing: -0.04em;
-    text-shadow: 0 0 40px color-mix(in oklch, var(--color-teal) 40%, transparent);
-  }
-  .about-mark {
-    width: 52%;
-    height: auto;
-    filter:
-      drop-shadow(0 0 12px color-mix(in oklch, var(--color-teal) 45%, transparent))
-      drop-shadow(0 0 28px color-mix(in oklch, var(--color-teal) 22%, transparent));
-    animation: about-mark-pulse 4.2s ease-in-out infinite;
-  }
-  @keyframes about-mark-pulse {
-    0%, 100% { filter: drop-shadow(0 0 10px color-mix(in oklch, var(--color-teal) 35%, transparent)); }
-    50%      { filter: drop-shadow(0 0 18px color-mix(in oklch, var(--color-teal) 65%, transparent))
-                       drop-shadow(0 0 32px color-mix(in oklch, var(--color-teal) 25%, transparent)); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .about-mark { animation: none; }
+    border-color: color-mix(in oklch, var(--color-teal) 70%, transparent);
   }
 
   .about-body {
@@ -148,7 +220,7 @@ import { site } from "../../content/site";
   }
 
   @media (max-width: 768px) {
-    .about-mono { max-width: 9rem; }
+    .about-portrait { max-width: 12rem; }
     .about-facts { grid-template-columns: 1fr; }
   }
 </style>

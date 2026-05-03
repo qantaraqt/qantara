@@ -1,6 +1,6 @@
 ---
 import Button from "../ui/Button.astro";
-import { site } from "../../content/site";
+import { wa, waMessages } from "../../content/site";
 ---
 
 <section class="hero">
@@ -22,22 +22,32 @@ import { site } from "../../content/site";
 
   <div class="u-container hero-inner">
     <div class="hero-body fadein-hero">
+      <p class="mono hero-kicker hero-prompt fadein-hero" aria-label="Status">
+        <span class="hero-prompt-sigil" aria-hidden="true">~/qantara</span>
+        <span class="hero-prompt-dollar" aria-hidden="true">$</span>
+        <span class="hero-prompt-cmd">build</span>
+        <span class="hero-prompt-flag">--disponivel</span>
+        <span class="hero-prompt-val">junho/2026</span>
+        <span class="hero-prompt-caret" aria-hidden="true"></span>
+      </p>
+
       <h1 class="display hero-title fadein-hero">
-        A ponte entre sua empresa<br class="hero-break" />
-        e as <em>possibilidades</em>.
+        Da ideia ao código<br class="hero-break" />
+        em produção, <em>à mão</em>.
       </h1>
 
       <p class="lede hero-lede fadein-hero">
-        Somos o <strong>Qantara</strong>, um estúdio de engenharia que
-        transforma ideias em produtos digitais robustos. Escopo claro,
-        prazos realistas e código que seu time pode manter.
+        <strong>Qantara</strong> significa <em>ponte</em> em árabe.
+        Estúdio independente que atravessa com você do escopo ao
+        deploy: arquitetura, código, banco e infraestrutura sob a
+        mesma mão. Sem PMs, sem terceirização, sem caixa-preta.
       </p>
 
       <div class="hero-actions fadein-hero">
-        <Button href={`https://wa.me/${site.whatsapp}?text=Ol%C3%A1%20Qantara%2C%20vim%20do%20site`} variant="primary" external={true}>
-          Fale com a Qantara
+        <Button href={wa(waMessages.hero)} variant="primary" external={true}>
+          Conversar no WhatsApp
         </Button>
-        <Button href="#metodo" variant="ghost">ver método</Button>
+        <Button href="#metodo" variant="ghost">como trabalhamos</Button>
       </div>
     </div>
   </div>
@@ -186,9 +196,64 @@ import { site } from "../../content/site";
     max-width: 16ch;
     letter-spacing: -0.03em;
     text-wrap: balance;
+    position: relative;
+    isolation: isolate;
   }
-  .hero-title em { font-style: normal; }
+  .hero-title em { font-style: normal; position: relative; }
   .hero-break { display: none; }
+
+  /* One-shot teal scan that sweeps once across the title on load.
+     Sits behind the letters; never loops. */
+  .hero-title::before {
+    content: "";
+    position: absolute;
+    inset: -0.15em -0.4em;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      transparent 38%,
+      color-mix(in oklch, var(--color-teal) 28%, transparent) 49%,
+      color-mix(in oklch, var(--color-teal) 45%, transparent) 50%,
+      color-mix(in oklch, var(--color-teal) 28%, transparent) 51%,
+      transparent 62%,
+      transparent 100%
+    );
+    background-size: 240% 100%;
+    background-position: -140% 0;
+    filter: blur(10px);
+    opacity: 0;
+    animation: hero-title-sweep 1.7s cubic-bezier(.2,.8,.2,1) 0.35s 1 forwards;
+  }
+  @keyframes hero-title-sweep {
+    0%   { background-position: -140% 0; opacity: 0; }
+    18%  { opacity: 0.9; }
+    100% { background-position: 240% 0; opacity: 0; }
+  }
+
+  /* Teal underline draws under the <em> after the sweep finishes. */
+  .hero-title em::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.04em;
+    height: 2px;
+    background: var(--color-teal);
+    box-shadow: 0 0 14px color-mix(in oklch, var(--color-teal) 60%, transparent);
+    transform-origin: left center;
+    transform: scaleX(0);
+    animation: hero-em-draw 720ms cubic-bezier(.2,.8,.2,1) 1.55s 1 forwards;
+  }
+  @keyframes hero-em-draw {
+    to { transform: scaleX(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-title::before { animation: none; opacity: 0; }
+    .hero-title em::after { animation: none; transform: scaleX(1); }
+  }
   @media (min-width: 768px) {
     .hero-title { line-height: 0.95; max-width: 14ch; }
     .hero-break { display: inline; }
@@ -220,6 +285,59 @@ import { site } from "../../content/site";
   .hero-kicker {
     color: color-mix(in oklch, var(--fg) 55%, transparent);
     margin-bottom: -0.25rem;
+  }
+
+  /* Terminal prompt — ~/qantara $ build --disponivel junho/2026 ▌ */
+  .hero-prompt {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid color-mix(in oklch, var(--color-teal) 22%, transparent);
+    border-radius: 6px;
+    background: color-mix(in oklch, var(--bg) 65%, transparent);
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    width: fit-content;
+    max-width: 100%;
+  }
+  .hero-prompt-sigil {
+    color: color-mix(in oklch, var(--fg) 40%, transparent);
+  }
+  .hero-prompt-dollar {
+    color: var(--color-teal);
+    font-weight: 600;
+    margin-left: -0.2rem;
+  }
+  .hero-prompt-cmd {
+    color: color-mix(in oklch, var(--fg) 90%, transparent);
+  }
+  .hero-prompt-flag {
+    color: var(--color-teal);
+    text-shadow: 0 0 10px color-mix(in oklch, var(--color-teal) 40%, transparent);
+  }
+  .hero-prompt-val {
+    color: color-mix(in oklch, var(--fg) 70%, transparent);
+  }
+  .hero-prompt-caret {
+    display: inline-block;
+    width: 7px;
+    height: 0.95em;
+    background: var(--color-teal);
+    box-shadow: 0 0 10px color-mix(in oklch, var(--color-teal) 60%, transparent);
+    vertical-align: -2px;
+    margin-left: -0.15rem;
+    animation: hero-caret-blink 1.05s steps(2, end) infinite;
+  }
+  @keyframes hero-caret-blink {
+    0%, 50%   { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-prompt-caret { animation: none; opacity: 1; }
   }
 
   .hero-dot {
