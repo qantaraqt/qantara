@@ -1,0 +1,127 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import Button from "../ui/Button.astro";
+import { process, site } from "../../content/site";
+---
+
+<section id="comecar" class="section-vault py-20 md:py-28">
+  <div class="u-container">
+    <SectionHeader eyebrow="começar" meta={`0${process.length} passos`}>
+      Como começamos.
+    </SectionHeader>
+
+    <p class="process-lede">
+      Sem funil, sem reuniões em cadeia, sem proposta de 30 páginas.
+      Quatro passos para descobrir, em uma semana, se faz sentido
+      atravessar este projeto juntos.
+    </p>
+
+    <ol class="process-grid">
+      {process.map((s) => (
+        <li class="process-card">
+          <div class="process-card-head">
+            <span class="mono process-num">{s.num}</span>
+            <h3 class="display process-title">{s.title}</h3>
+          </div>
+          <p class="process-desc">{s.desc}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="process-cta">
+      <Button href={site.linkedin} variant="primary" external={true}>
+        Agendar conversa
+      </Button>
+      <span class="mono process-cta-meta">resposta em até 24h · dias úteis</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .process-lede {
+    max-width: 60ch;
+    margin: -0.25rem 0 2.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: color-mix(in oklch, var(--fg) 65%, transparent);
+  }
+
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 1px;
+    background: color-mix(in oklch, var(--fg) 7%, transparent);
+    border: 1px solid color-mix(in oklch, var(--fg) 7%, transparent);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .process-card {
+    background: var(--bg);
+    padding: 1.5rem 1.5rem 1.75rem;
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    transition: background 300ms ease;
+    position: relative;
+  }
+  .process-card::before {
+    /* subtle teal corner glyph */
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 18px;
+    height: 18px;
+    border-top: 1px solid color-mix(in oklch, var(--color-teal) 55%, transparent);
+    border-left: 1px solid color-mix(in oklch, var(--color-teal) 55%, transparent);
+    border-top-left-radius: 6px;
+    opacity: 0.55;
+    transition: opacity 300ms ease;
+  }
+  .process-card:hover {
+    background: color-mix(in oklch, var(--bg-elev) 60%, var(--bg));
+  }
+  .process-card:hover::before {
+    opacity: 1;
+  }
+
+  .process-card-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .process-num {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: color-mix(in oklch, var(--color-teal) 65%, transparent);
+  }
+
+  .process-title {
+    font-size: clamp(1.15rem, 2vw, 1.5rem);
+    letter-spacing: -0.02em;
+    color: color-mix(in oklch, var(--fg) 92%, transparent);
+  }
+
+  .process-desc {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: color-mix(in oklch, var(--fg) 62%, transparent);
+    max-width: 42ch;
+  }
+
+  .process-cta {
+    margin-top: 2.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.25rem;
+  }
+  .process-cta-meta {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--fg) 45%, transparent);
+  }
+</style>

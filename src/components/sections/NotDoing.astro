@@ -1,0 +1,64 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import { notDoing } from "../../content/site";
+---
+
+<section id="nao-fazemos" class="py-20 md:py-28 relative">
+  <div class="u-container grid grid-cols-12 gap-y-10 md:gap-10 items-start">
+    <div class="col-span-12 md:col-span-4 md:sticky md:top-28 self-start">
+      <SectionHeader eyebrow="postura" meta="filtro honesto">
+        O que <em>não</em> fazemos.
+      </SectionHeader>
+      <p class="text-white/55 text-sm max-w-[36ch]">
+        Recusar projeto errado é mais respeitoso que aceitar e
+        entregar mal. O que está abaixo não vai mudar amanhã.
+      </p>
+    </div>
+
+    <ul class="col-span-12 md:col-span-8 not-doing-list">
+      {notDoing.map((item) => (
+        <li class="not-doing-item">
+          <span class="not-doing-mark mono" aria-hidden="true">×</span>
+          <span class="not-doing-text">{item}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .not-doing-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .not-doing-item {
+    display: grid;
+    grid-template-columns: 1.6rem 1fr;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.85rem 0;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 7%, transparent);
+    transition: padding-left 240ms var(--ease-emph);
+  }
+  .not-doing-item:last-child {
+    border-bottom: 1px solid color-mix(in oklch, var(--fg) 7%, transparent);
+  }
+  .not-doing-item:hover {
+    padding-left: 0.4rem;
+  }
+
+  .not-doing-mark {
+    font-size: 0.95rem;
+    line-height: 1;
+    color: color-mix(in oklch, var(--color-teal) 70%, transparent);
+    transform: translateY(0.05em);
+    letter-spacing: 0;
+  }
+
+  .not-doing-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: color-mix(in oklch, var(--fg) 80%, transparent);
+  }
+</style>
