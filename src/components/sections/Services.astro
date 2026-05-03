@@ -1,7 +1,7 @@
 ---
 import SectionHeader from "../ui/SectionHeader.astro";
 import Disclosure from "../ui/Disclosure.astro";
-import { services, wa, waMessages } from "../../content/site";
+import { services, site } from "../../content/site";
 ---
 
 <section id="servicos" class="section-vault py-20 md:py-28 relative">
@@ -54,7 +54,7 @@ import { services, wa, waMessages } from "../../content/site";
                 </ul>
               </div>
               <a
-                href={wa(waMessages.service(s.title))}
+                href={site.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="service-cta mono"

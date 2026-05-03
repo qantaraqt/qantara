@@ -1,6 +1,6 @@
 ---
 import Button from "../ui/Button.astro";
-import { wa, waMessages } from "../../content/site";
+import { site } from "../../content/site";
 ---
 
 <section class="hero">
@@ -44,8 +44,8 @@ import { wa, waMessages } from "../../content/site";
       </p>
 
       <div class="hero-actions fadein-hero">
-        <Button href={wa(waMessages.hero)} variant="primary" external={true}>
-          Conversar no WhatsApp
+        <Button href={site.linkedin} variant="primary" external={true}>
+          Agendar conversa
         </Button>
         <Button href="#metodo" variant="ghost">como trabalhamos</Button>
       </div>

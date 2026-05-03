@@ -6,26 +6,9 @@
 export const site = {
   brand: "Qantara",
   domain: "qantara.com.br",
-  email: "andresmolinaroms@icloud.com",
-  whatsapp: "5527992698323",
-  whatsappDisplay: "+55 27 99269 8323",
+  linkedin: "https://www.linkedin.com/in/andryus/",
   tagline: "engenharia de software, atravessada à mão",
   year: 2026,
-} as const;
-
-/**
- * WhatsApp deep-link helper. Encodes a contextual message so the
- * conversation already lands with intent.
- */
-export const wa = (msg: string) =>
-  `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(msg)}`;
-
-export const waMessages = {
-  hero:    "Olá, Andrés. Vim do site da Qantara para conversar sobre um projeto.",
-  footer:  "Olá, Andrés. Vim do site da Qantara e quero iniciar uma conversa.",
-  faq:     "Olá, Andrés. Vim da seção de dúvidas do site da Qantara. Tenho uma pergunta.",
-  service: (title: string) =>
-    `Olá, Andrés. Vim do site da Qantara. Tenho interesse em "${title}".`,
 } as const;
 
 export const nav = [
