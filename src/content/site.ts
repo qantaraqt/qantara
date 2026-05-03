@@ -282,7 +282,7 @@ export const process: ProcessStep[] = [
   {
     num: "04",
     title: "Recusa honesta",
-    desc: "Se não fizer sentido (escopo errado, prazo impossível, fora do nosso domínio), digo por escrito por quê e indico outro caminho ou outro profissional.",
+    desc: "Se não fizer sentido (escopo errado, prazo impossível, fora do nosso domínio), digo por escrito por quê. Sem proposta forçada, sem orçamento inflado para te afastar.",
     meta: "mesmo prazo · mesmo cuidado",
   },
 ];
