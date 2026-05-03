@@ -4,7 +4,7 @@ import Button from "../ui/Button.astro";
 import { process, site } from "../../content/site";
 ---
 
-<section id="comecar" class="section-vault py-20 md:py-28">
+<section id="comecar" class="section-vault process-section py-20 md:py-28">
   <div class="u-container">
     <SectionHeader eyebrow="começar" meta={`0${process.length} passos`}>
       Como começamos.
@@ -38,6 +38,15 @@ import { process, site } from "../../content/site";
 </section>
 
 <style>
+  /* Vault section forces a dark backdrop in both themes.
+     Remap local tokens so cards stay readable regardless of page theme. */
+  .process-section {
+    --bg: oklch(0.11 0.012 210);
+    --bg-elev: oklch(0.15 0.015 205);
+    --fg: oklch(0.97 0.008 85);
+    color-scheme: dark;
+  }
+
   .process-lede {
     max-width: 60ch;
     margin: -0.25rem 0 2.5rem;
