@@ -17,13 +17,15 @@ import { process, site } from "../../content/site";
     </p>
 
     <ol class="process-grid">
-      {process.map((s) => (
-        <li class="process-card">
+      {process.map((s, i) => (
+        <li class:list={["process-card", { "process-card--accent": i === process.length - 1 }]}>
+          <span class="process-ghost" aria-hidden="true">{s.num}</span>
           <div class="process-card-head">
             <span class="mono process-num">{s.num}</span>
             <h3 class="display process-title">{s.title}</h3>
           </div>
           <p class="process-desc">{s.desc}</p>
+          <span class="mono process-meta">{s.meta}</span>
         </li>
       ))}
     </ol>
@@ -72,12 +74,37 @@ import { process, site } from "../../content/site";
 
   .process-card {
     background: var(--bg);
-    padding: 1.5rem 1.5rem 1.75rem;
+    padding: 1.75rem 1.5rem 1.5rem;
     display: grid;
     gap: 0.75rem;
     align-content: start;
     transition: background 300ms ease;
     position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 11rem;
+  }
+  .process-ghost {
+    position: absolute;
+    top: -0.4rem;
+    right: 0.6rem;
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 10vw, 8rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: color-mix(in oklch, var(--color-teal) 8%, transparent);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    transition: color 400ms var(--ease-emph);
+  }
+  .process-card:hover .process-ghost {
+    color: color-mix(in oklch, var(--color-teal) 14%, transparent);
+  }
+  .process-card > *:not(.process-ghost) {
+    position: relative;
+    z-index: 1;
   }
   .process-card::before {
     /* subtle teal corner glyph */
@@ -92,12 +119,23 @@ import { process, site } from "../../content/site";
     border-top-left-radius: 6px;
     opacity: 0.55;
     transition: opacity 300ms ease;
+    z-index: 2;
   }
   .process-card:hover {
     background: color-mix(in oklch, var(--bg-elev) 60%, var(--bg));
   }
   .process-card:hover::before {
     opacity: 1;
+  }
+
+  /* Accent treatment for the final "Recusa honesta" card.
+     A 2px teal left edge marks the rare-but-honest commitment. */
+  .process-card--accent {
+    box-shadow: inset 2px 0 0 0 color-mix(in oklch, var(--color-teal) 65%, transparent);
+  }
+  .process-card--accent .process-num::before {
+    content: "// ";
+    color: color-mix(in oklch, var(--color-teal) 70%, transparent);
   }
 
   .process-card-head {
@@ -123,6 +161,15 @@ import { process, site } from "../../content/site";
     line-height: 1.6;
     color: color-mix(in oklch, var(--fg) 62%, transparent);
     max-width: 42ch;
+  }
+
+  .process-meta {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--fg) 38%, transparent);
   }
 
   .process-cta {

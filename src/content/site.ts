@@ -257,6 +257,7 @@ export interface ProcessStep {
   num: string;
   title: string;
   desc: string;
+  meta: string;
 }
 
 export const process: ProcessStep[] = [
@@ -264,21 +265,25 @@ export const process: ProcessStep[] = [
     num: "01",
     title: "Conversa",
     desc: "30 minutos via LinkedIn. Sem custo, sem compromisso. Você descreve o problema; eu pergunto o suficiente para responder com honestidade.",
+    meta: "~ 30 min · gratuito",
   },
   {
     num: "02",
     title: "Proposta",
     desc: "Em até 5 dias úteis, devolvo escopo, arquitetura, prazo e investimento por escrito. Preço fechado por escopo fechado, nunca hora-cobrada.",
+    meta: "≤ 5 dias úteis · por escrito",
   },
   {
     num: "03",
     title: "Início",
     desc: "Se fizer sentido: contrato direto entre as partes, 30% na assinatura, início em até 2 semanas. Pagamento em marcos atrelados a entregas validáveis.",
+    meta: "início em até 2 semanas",
   },
   {
     num: "04",
     title: "Recusa honesta",
     desc: "Se não fizer sentido (escopo errado, prazo impossível, fora do nosso domínio), digo por escrito por quê e indico outro caminho ou outro profissional.",
+    meta: "mesmo prazo · mesmo cuidado",
   },
 ];
 
