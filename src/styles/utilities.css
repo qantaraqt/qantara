@@ -74,8 +74,8 @@ html { scroll-behavior: smooth; }
 /* Scroll-snap: each fold (hero, about, services, method, tech, works, faq, footer)
    anchors to the top of the viewport. `proximity` (not mandatory) so users can
    free-scroll inside long sections without being forced to snap.
-   Disabled on reduced-motion. */
-@media (min-width: 0px) {
+   Disabled on mobile (causes janky/stuck scroll on touch devices) and reduced-motion. */
+@media (min-width: 1024px) {
   html { scroll-snap-type: y proximity; }
   main > section,
   main > footer,

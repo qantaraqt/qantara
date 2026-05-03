@@ -23,7 +23,7 @@ const canonical = "https://qantara.cloud";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f3f0e8" />
+    <meta name="theme-color" content="#0a1518" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -38,10 +38,10 @@ const canonical = "https://qantara.cloud";
       (function () {
         try {
           var saved = localStorage.getItem("theme");
-          var theme = saved === "dark" || saved === "light" ? saved : "light";
+          var theme = saved === "dark" || saved === "light" ? saved : "dark";
           document.documentElement.setAttribute("data-theme", theme);
         } catch (_) {
-          document.documentElement.setAttribute("data-theme", "light");
+          document.documentElement.setAttribute("data-theme", "dark");
         }
       })();
     </script>
@@ -53,18 +53,18 @@ const canonical = "https://qantara.cloud";
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="pt_BR" />
-    <meta property="og:image" content="https://qantara.cloud/logo.jpeg" />
-    <meta property="og:image:secure_url" content="https://qantara.cloud/logo.jpeg" />
+    <meta property="og:image" content="https://qantara.cloud/logo-og.jpg?v=2" />
+    <meta property="og:image:secure_url" content="https://qantara.cloud/logo-og.jpg?v=2" />
     <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="1024" />
-    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="600" />
     <meta property="og:image:alt" content="Qantara · a ponte entre tecnologia e possibilidades" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="https://qantara.cloud/logo.jpeg" />
+    <meta name="twitter:image" content="https://qantara.cloud/logo-og.jpg?v=2" />
 
     <title>{title}</title>
   </head>
