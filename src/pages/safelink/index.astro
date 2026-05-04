@@ -11,6 +11,12 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 >
   <main class="safelink-main">
     <section class="safelink-hero">
+      <picture class="safelink-bg" aria-hidden="true">
+        <source srcset="/back.avif" type="image/avif" />
+        <source srcset="/back.webp" type="image/webp" />
+        <img src="/back.webp" alt="" width="2048" height="818" decoding="async" />
+      </picture>
+      <div class="safelink-bg-scrim" aria-hidden="true"></div>
       <div class="u-container">
         <p class="mono kicker">
           <span class="kicker-tool">safelink</span>
@@ -269,7 +275,38 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 
   /* Hero ------------------------------------------------------------ */
   .safelink-hero {
+    position: relative;
     padding: 4rem 0 5rem;
+    isolation: isolate;
+  }
+
+  .safelink-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .safelink-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+    opacity: 0.55;
+  }
+  .safelink-bg-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 70%, transparent 0%, var(--bg) 75%),
+      linear-gradient(to bottom, var(--bg) 0%, transparent 30%, transparent 60%, var(--bg) 100%);
+  }
+  /* Light theme: less image, more wash */
+  :root[data-theme="light"] .safelink-bg img,
+  :root:not([data-theme="dark"]) .safelink-bg img {
+    opacity: 0.18;
   }
 
   .kicker {
