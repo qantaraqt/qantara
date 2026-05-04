@@ -87,9 +87,10 @@ import { site } from "../../content/site";
     object-fit: cover;
     object-position: center 60%;
   }
-  /* Per-theme contrast boost so the bridge actually reads */
-  .hero-bg img {
-    filter: contrast(1.18) saturate(1.35) brightness(1.12);
+  /* No filter on dark theme — preserves the neon glow as shot.
+     Light theme gets a slight darken so the image still reads. */
+  :root:not([data-theme="dark"]) .hero-bg img {
+    filter: brightness(0.9) contrast(1.05);
   }
 
   /* Teal halo behind the bridge — makes it pop in both themes */
@@ -131,7 +132,7 @@ import { site } from "../../content/site";
       );
   }
 
-  /* Layered scrim — only veils left-side (for text), lets bridge breathe */
+  /* Layered scrim — lighter veil on the left for text, lets bridge breathe */
   .hero-scrim {
     position: absolute;
     inset: 0;
@@ -140,17 +141,17 @@ import { site } from "../../content/site";
       linear-gradient(
         180deg,
         var(--bg) 0%,
-        color-mix(in oklch, var(--bg) 40%, transparent) 8%,
-        transparent 28%,
-        transparent 75%,
-        color-mix(in oklch, var(--bg) 55%, transparent) 94%,
+        color-mix(in oklch, var(--bg) 25%, transparent) 8%,
+        transparent 22%,
+        transparent 80%,
+        color-mix(in oklch, var(--bg) 40%, transparent) 95%,
         var(--bg) 100%
       ),
       linear-gradient(
         90deg,
-        color-mix(in oklch, var(--bg) 94%, transparent) 0%,
-        color-mix(in oklch, var(--bg) 50%, transparent) 40%,
-        transparent 72%
+        color-mix(in oklch, var(--bg) 88%, transparent) 0%,
+        color-mix(in oklch, var(--bg) 35%, transparent) 38%,
+        transparent 68%
       );
   }
 
