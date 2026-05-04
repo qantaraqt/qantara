@@ -5,8 +5,8 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 ---
 
 <Base
-  title="SafeLink, o link é seguro? Descubra em 2 segundos | Qantara"
-  description="Cole um link, print de boleto ou QR Code Pix e em 2 segundos veja se há sinais de golpe. Grátis, sem cadastro, anônimo."
+  title="SafeLink, o link é seguro? Descubra antes de pagar | Qantara"
+  description="Cole um link, print de boleto ou QR Code Pix e veja se há sinais de golpe. Grátis, sem cadastro, anônimo. Resposta em segundos."
   minimalHeader
   forceTheme="light"
   hideThemeToggle={true}
@@ -25,7 +25,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
           </p>
           <h1 class="sl-title">
             O link é seguro?<br class="sl-break" />
-            <em>Descubra em 2 segundos.</em>
+            <em>Descubra antes de pagar.</em>
           </h1>
           <p class="sl-lede">
             <strong>SafeLink</strong> atravessa link, print e QR Code com você
@@ -1076,8 +1076,8 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     const pct = (part, total) => total > 0 ? Math.round((part / total) * 100) + "%" : dash;
     const tiles = [
       ["verificacoes totais", fmt(s.checks_total)],
-      ["% golpes detectados", pct(s.checks_risco, s.checks_total)],
-      ["% alertas (cautela)", pct(s.checks_cautela, s.checks_total)],
+      ["golpes detectados", pct(s.checks_risco, s.checks_total)],
+      ["alertas (cautela)", pct(s.checks_cautela, s.checks_total)],
       ["denuncias recebidas", fmt(s.reports_received)],
       ["promovidas p/ blocklist", fmt(s.reports_promoted)],
       ["tempo medio", s.avg_duration_ms ? (s.avg_duration_ms / 1000).toFixed(1) + "s" : dash],
@@ -1844,7 +1844,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     border-bottom: 1px solid var(--sl-border);
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.4rem;
     background: transparent;
   }
   .sl-stat-tile:last-child { border-right: 0; }
