@@ -149,7 +149,9 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
       </div>
     </section>
 
-    <section class="sl-stats" id="sl-stats" aria-label="em operação">
+    {/* Estatísticas públicas: ocultas até termos volume relevante.
+        JSON segue público em /safelink/v1/public/stats. */}
+    <section class="sl-stats" id="sl-stats" aria-label="em operação" hidden>
       <div class="u-container">
         <div class="sl-stats-head">
           <span class="sl-eyebrow-text">em operação</span>
@@ -1066,11 +1068,17 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
         ? `${fmt(s.checks_total)} verificacoes`
         : "online";
     }
-    if (statsMeta) {
-      statsMeta.textContent = s.checks_total > 0
-        ? `${fmt(s.checks_total)} verificacoes`
-        : "primeiros dias";
+
+    // Stats só aparecem com volume honesto (>=50 checagens).
+    // Abaixo disso, melhor não mostrar do que mostrar números pequenos.
+    const SHOW_THRESHOLD = 50;
+    if (s.checks_total < SHOW_THRESHOLD) {
+      if (statsSection) statsSection.hidden = true;
+      return;
     }
+
+    if (statsSection) statsSection.hidden = false;
+    if (statsMeta) statsMeta.textContent = `${fmt(s.checks_total)} verificacoes`;
     statsGrid.innerHTML = "";
     const dash = "—";
     const pct = (part, total) => total > 0 ? Math.round((part / total) * 100) + "%" : dash;
