@@ -16,33 +16,3 @@
     transparent
   );
 }
-
-.deck-line::before {
-  content: "";
-  position: absolute;
-  inset: -2px 0;
-  background: radial-gradient(
-    circle at var(--flow, 0%) 50%,
-    var(--color-teal) 0%,
-    color-mix(in oklch, var(--color-teal) 60%, transparent) 1.2%,
-    transparent 4%
-  );
-  filter: drop-shadow(0 0 8px var(--bridge-glow));
-  animation: flow 8s linear infinite;
-}
-
-@keyframes flow {
-  from {
-    --flow: -4%;
-  }
-  to {
-    --flow: 104%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .deck-line::before {
-    animation: none;
-    opacity: 0;
-  }
-}

@@ -469,26 +469,36 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 
   /* Topo: hero compacto, sem imagem, sem efeitos pesados ----------- */
   .sl-top {
-    padding: 5rem 0 2.5rem;
+    padding: 5rem 0 2.75rem;
     border-bottom: 1px solid var(--sl-border);
+    background:
+      radial-gradient(
+        ellipse 60% 70% at 50% 0%,
+        var(--sl-accent-soft) 0%,
+        transparent 70%
+      );
   }
-  .sl-wrap { max-width: 44rem; }
+  .sl-wrap {
+    max-width: 42rem;
+    margin-inline: auto;
+    text-align: center;
+  }
 
-  .sl-head { margin-bottom: 1.75rem; }
+  .sl-head { margin-bottom: 2rem; }
   .sl-title {
-    font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+    font-size: clamp(2rem, 5vw, 2.75rem);
     line-height: 1.1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     font-weight: 600;
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.85rem 0;
     color: var(--sl-fg);
   }
   .sl-lede {
     font-size: 1.05rem;
-    line-height: 1.55;
+    line-height: 1.6;
     color: var(--sl-fg-muted);
-    margin: 0;
-    max-width: 36rem;
+    margin: 0 auto;
+    max-width: 34rem;
   }
 
   /* Form ----------------------------------------------------------- */
@@ -542,11 +552,12 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
   }
 
   .sl-meta {
-    margin: 0.75rem 0 0 0;
+    margin: 0.85rem auto 0;
     font-family: var(--sl-mono);
     font-size: 0.78rem;
     letter-spacing: 0.02em;
     color: var(--sl-fg-soft);
+    text-align: center;
   }
   .sl-meta code {
     background: var(--sl-surface);
@@ -568,6 +579,8 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     border-radius: 10px;
     background: var(--sl-bg);
     overflow: hidden;
+    text-align: left;
+    box-shadow: 0 4px 24px -12px rgba(15, 23, 42, 0.12);
   }
   .sl-panel[hidden] { display: none; }
 
@@ -796,50 +809,60 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 
   /* Camadas -------------------------------------------------------- */
   .sl-camadas {
-    padding: 3rem 0 3.5rem;
+    padding: 3.5rem 0 4rem;
+    background: var(--sl-surface);
     border-bottom: 1px solid var(--sl-border);
   }
+  .sl-camadas .u-container { max-width: 64rem; }
   .sl-eyebrow {
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 2rem 0;
     font-family: var(--sl-mono);
     font-size: 0.78rem;
     letter-spacing: 0.04em;
     color: var(--sl-fg-soft);
     text-transform: lowercase;
+    text-align: center;
   }
   .sl-grid {
     list-style: none;
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-    gap: 0.5rem 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--sl-border);
+    border-left: 1px solid var(--sl-border);
+    background: var(--sl-bg);
   }
   .sl-grid li {
     display: grid;
-    grid-template-columns: 2.25rem 1fr;
-    gap: 0.5rem;
-    padding: 0.65rem 0;
-    border-top: 1px solid var(--sl-border);
-    color: var(--sl-fg-muted);
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 1rem 1.1rem;
+    border-right: 1px solid var(--sl-border);
+    border-bottom: 1px solid var(--sl-border);
+    color: var(--sl-fg);
     font-size: 0.92rem;
-    line-height: 1.45;
+    line-height: 1.4;
   }
   .sl-grid li b {
     font-family: var(--sl-mono);
     font-size: 0.78rem;
     color: var(--sl-accent);
     font-weight: 500;
+    letter-spacing: 0.02em;
   }
 
   /* Rodapé --------------------------------------------------------- */
-  .sl-rodape { padding: 2rem 0 3rem; }
+  .sl-rodape { padding: 2.5rem 0 3.5rem; }
   .sl-rodape p {
     color: var(--sl-fg-soft);
     font-size: 0.88rem;
     line-height: 1.55;
     max-width: 36rem;
-    margin: 0;
+    margin: 0 auto;
+    text-align: center;
   }
   .sl-rodape a {
     color: var(--sl-fg);
