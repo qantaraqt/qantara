@@ -15,11 +15,13 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     <section class="sl-top">
       <div class="u-container sl-wrap">
         <header class="sl-head">
-          <h1 class="sl-title">Esse link é confiável?</h1>
+          <h1 class="sl-title">Esse Pix vai pra quem você pensa?</h1>
           <p class="sl-lede">
-            Cole o endereço da loja, do boleto ou do pix.
-            Em até sessenta segundos verificamos domínio,
-            certificado, reputação, CNPJ e gateway de pagamento.
+            Antes de pagar boleto, comprar em loja desconhecida ou
+            seguir link de promoção, cole o endereço aqui. Em segundos
+            cruzamos domínio, CNPJ, certificado e gateway de pagamento
+            para apontar sinais de phishing, página clonada ou
+            captura de cartão.
           </p>
         </header>
 
@@ -71,18 +73,16 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
             <p class="sl-result-subtitle" data-subtitle></p>
 
             <aside class="sl-warning" role="note">
-              <p class="sl-warning-kicker">antes de continuar</p>
+              <p class="sl-warning-kicker">leia antes de pagar</p>
               <p class="sl-warning-headline">
-                Não pague, não transfira, não digite senha ou código Pix
-                neste site sem confirmar pelo canal oficial.
+                Site “seguro” não significa Pix seguro.
               </p>
               <p class="sl-warning-body">
-                O SafeLink combina sinais técnicos com dois modelos de IA,
-                mas <b>nenhum sistema acerta 100%</b>. Mesmo quando o
-                resultado parece seguro, golpes financeiros podem se
-                esconder em sites bem montados. Confirme o destinatário do
-                Pix, o CNPJ da loja e nunca informe código recebido por
-                SMS ou WhatsApp.
+                Confira o nome do recebedor do Pix antes de confirmar.
+                Desconfie de boleto vindo por WhatsApp, código enviado
+                por SMS ou desconto que só vale agora. Se for cartão,
+                use o app oficial do banco — nunca digite número, CVV
+                e validade em formulário direto da página.
               </p>
             </aside>
 
@@ -827,7 +827,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     flex-direction: column;
     gap: 1rem;
   }
-  .sl-motivos li {
+  .sl-motivos :global(li) {
     display: grid;
     grid-template-columns: 2.25rem 1fr;
     gap: 0.75rem;
@@ -837,22 +837,22 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     border-radius: 6px;
     background: var(--sl-bg);
   }
-  .sl-motivos li[data-peso="alto"]  { border-left-color: var(--sl-danger); }
-  .sl-motivos li[data-peso="medio"] { border-left-color: var(--sl-warn); }
-  .sl-motivos li[data-peso="info"]  { border-left-color: var(--sl-accent); }
-  .motivo-num {
+  .sl-motivos :global(li[data-peso="alto"])  { border-left-color: var(--sl-danger); }
+  .sl-motivos :global(li[data-peso="medio"]) { border-left-color: var(--sl-warn); }
+  .sl-motivos :global(li[data-peso="info"])  { border-left-color: var(--sl-accent); }
+  :global(.motivo-num) {
     font-family: var(--sl-mono);
     font-size: 0.78rem;
     color: var(--sl-fg-soft);
     padding-top: 0.15rem;
   }
-  .motivo-body h3 {
+  :global(.motivo-body h3) {
     margin: 0 0 0.25rem 0;
     font-size: 0.98rem;
     font-weight: 600;
     color: var(--sl-fg);
   }
-  .motivo-body p {
+  :global(.motivo-body p) {
     margin: 0;
     color: var(--sl-fg-muted);
     font-size: 0.92rem;
@@ -970,7 +970,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     background: var(--sl-bg);
     overflow: hidden;
   }
-  .sl-checks-list li {
+  .sl-checks-list :global(li) {
     display: grid;
     grid-template-columns: 2.25rem 1fr auto;
     align-items: center;
@@ -980,15 +980,15 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     font-size: 0.88rem;
     line-height: 1.4;
   }
-  .sl-checks-list li:last-child { border-bottom: 0; }
-  .sl-check-num {
+  .sl-checks-list :global(li:last-child) { border-bottom: 0; }
+  :global(.sl-check-num) {
     font-family: var(--sl-mono);
     font-size: 0.75rem;
     color: var(--sl-fg-soft);
     letter-spacing: 0.02em;
   }
-  .sl-check-label { color: var(--sl-fg); }
-  .sl-check-detail {
+  :global(.sl-check-label) { color: var(--sl-fg); }
+  :global(.sl-check-detail) {
     font-family: var(--sl-mono);
     font-size: 0.78rem;
     color: var(--sl-fg-muted);
@@ -996,16 +996,16 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     padding-left: 0.5rem;
     border-left: 3px solid var(--sl-border);
   }
-  .sl-checks-list li[data-status="ok"]     .sl-check-detail { border-left-color: var(--sl-ok); color: var(--sl-ok); }
-  .sl-checks-list li[data-status="alerta"] .sl-check-detail { border-left-color: var(--sl-danger); color: var(--sl-danger); }
-  .sl-checks-list li[data-status="info"]   .sl-check-detail { border-left-color: var(--sl-accent); }
-  .sl-checks-list li[data-status="na"]     .sl-check-detail { border-left-color: var(--sl-border); color: var(--sl-fg-soft); }
+  .sl-checks-list :global(li[data-status="ok"]     .sl-check-detail) { border-left-color: var(--sl-ok); color: var(--sl-ok); }
+  .sl-checks-list :global(li[data-status="alerta"] .sl-check-detail) { border-left-color: var(--sl-danger); color: var(--sl-danger); }
+  .sl-checks-list :global(li[data-status="info"]   .sl-check-detail) { border-left-color: var(--sl-accent); }
+  .sl-checks-list :global(li[data-status="na"]     .sl-check-detail) { border-left-color: var(--sl-border); color: var(--sl-fg-soft); }
   @media (max-width: 520px) {
-    .sl-checks-list li {
+    .sl-checks-list :global(li) {
       grid-template-columns: 2rem 1fr;
       grid-template-rows: auto auto;
     }
-    .sl-check-detail {
+    :global(.sl-check-detail) {
       grid-column: 2;
       text-align: left;
       border-left: 0;
