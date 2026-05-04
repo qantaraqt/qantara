@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /safelink/admin
+Disallow: /safelink/admin/
+
+Sitemap: https://qantara.com.br/sitemap-index.xml

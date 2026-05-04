@@ -8,12 +8,14 @@ interface Props {
   title?: string;
   description?: string;
   minimalHeader?: boolean;
+  noindex?: boolean;
 }
 
 const {
   title = "Qantara · estúdio de engenharia de software sob medida",
   description = "Estúdio independente de engenharia de software. Sistemas web, segurança, infraestrutura e antifraude, construídos à mão, do primeiro escopo ao deploy em produção.",
   minimalHeader = false,
+  noindex = false,
 } = Astro.props;
 
 const canonical = "https://qantara.com.br";
@@ -66,7 +68,7 @@ const jsonLd = {
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0a1518" />
     <meta name="color-scheme" content="dark light" />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large"} />
     <meta name="format-detection" content="telephone=no" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href={canonical} />

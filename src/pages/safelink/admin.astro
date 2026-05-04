@@ -1,0 +1,620 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.br";
+---
+
+<Base
+  title="Qantara · Admin"
+  description="Painel administrativo Qantara SafeLink"
+  minimalHeader
+  noindex
+>
+  <main class="adm-main">
+    <!-- Login -->
+    <section id="adm-login" class="adm-login">
+      <div class="u-container adm-login-inner">
+        <p class="mono adm-tag">qantara · safelink admin</p>
+        <h1 class="adm-title">painel restrito</h1>
+        <p class="adm-help">
+          Cole a <code>MASTER_API_KEY</code> abaixo. A chave é guardada apenas
+          em <code>sessionStorage</code> e descartada quando você fechar a aba.
+        </p>
+        <form id="adm-form" class="adm-form" novalidate>
+          <input
+            id="adm-key"
+            type="password"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="cole a master key"
+            required
+          />
+          <button type="submit" class="adm-submit">entrar →</button>
+        </form>
+        <p id="adm-err" class="adm-err" hidden></p>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="adm-dash" class="adm-dash" hidden>
+      <div class="u-container">
+        <header class="adm-bar">
+          <div>
+            <p class="mono adm-tag">qantara · safelink admin</p>
+            <h1 class="adm-title">métricas em tempo real</h1>
+          </div>
+          <div class="adm-bar-actions">
+            <span id="adm-updated" class="mono adm-meta"></span>
+            <button id="adm-refresh" class="adm-btn">atualizar</button>
+            <button id="adm-logout" class="adm-btn adm-btn-ghost">sair</button>
+          </div>
+        </header>
+
+        <!-- KPIs -->
+        <section class="adm-grid adm-kpis">
+          <div class="adm-card">
+            <p class="mono adm-card-label">análises 24h</p>
+            <p class="adm-card-value" data-k="total24"></p>
+            <p class="mono adm-card-meta" data-k="totalAll"></p>
+          </div>
+          <div class="adm-card">
+            <p class="mono adm-card-label">fraude 24h</p>
+            <p class="adm-card-value" data-k="fraud24"></p>
+            <p class="mono adm-card-meta" data-k="fraudPct"></p>
+          </div>
+          <div class="adm-card">
+            <p class="mono adm-card-label">cache hit 24h</p>
+            <p class="adm-card-value" data-k="cachePct"></p>
+            <p class="mono adm-card-meta">economia de chamadas</p>
+          </div>
+          <div class="adm-card">
+            <p class="mono adm-card-label">latência p95</p>
+            <p class="adm-card-value" data-k="p95"></p>
+            <p class="mono adm-card-meta" data-k="latMeta"></p>
+          </div>
+        </section>
+
+        <!-- Saúde -->
+        <section class="adm-section">
+          <h2 class="adm-h2">saúde dos subsistemas</h2>
+          <ul class="adm-health" id="adm-health"></ul>
+        </section>
+
+        <!-- Volume timeseries -->
+        <section class="adm-section">
+          <h2 class="adm-h2">volume diário (7d)</h2>
+          <div class="adm-chart" id="adm-ts"></div>
+        </section>
+
+        <div class="adm-grid adm-grid-2">
+          <!-- Veredictos -->
+          <section class="adm-section">
+            <h2 class="adm-h2">veredictos (7d)</h2>
+            <ul class="adm-bars" id="adm-vrd"></ul>
+          </section>
+
+          <!-- Segurança -->
+          <section class="adm-section">
+            <h2 class="adm-h2">eventos de segurança (30d)</h2>
+            <ul class="adm-bars" id="adm-sec"></ul>
+          </section>
+        </div>
+
+        <div class="adm-grid adm-grid-2">
+          <!-- Top domínios -->
+          <section class="adm-section">
+            <h2 class="adm-h2">top domínios (7d)</h2>
+            <table class="adm-table" id="adm-top-all"></table>
+          </section>
+
+          <!-- Top fraudes -->
+          <section class="adm-section">
+            <h2 class="adm-h2">top domínios fraudulentos (30d)</h2>
+            <table class="adm-table" id="adm-top-fraud"></table>
+          </section>
+        </div>
+
+        <!-- API keys -->
+        <section class="adm-section">
+          <h2 class="adm-h2">uso por API key (30d)</h2>
+          <table class="adm-table" id="adm-keys"></table>
+        </section>
+
+        <!-- Recentes -->
+        <section class="adm-section">
+          <h2 class="adm-h2">últimas 50 análises</h2>
+          <table class="adm-table" id="adm-recent"></table>
+        </section>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script is:inline define:vars={{ apiBase }}>
+  const $ = (id) => document.getElementById(id);
+  const SS_KEY = "qantara_admin_key";
+
+  function getKey() {
+    return sessionStorage.getItem(SS_KEY);
+  }
+  function setKey(k) {
+    sessionStorage.setItem(SS_KEY, k);
+  }
+  function clearKey() {
+    sessionStorage.removeItem(SS_KEY);
+  }
+
+  async function api(path) {
+    const key = getKey();
+    if (!key) throw new Error("no_key");
+    const res = await fetch(`${apiBase}${path}`, {
+      headers: { Authorization: `Bearer ${key}` },
+    });
+    if (res.status === 403) throw new Error("forbidden");
+    if (res.status === 429) throw new Error("rate_limited");
+    if (!res.ok) throw new Error(`http_${res.status}`);
+    return res.json();
+  }
+
+  function fmt(n, digits = 0) {
+    if (n === null || n === undefined) return "—";
+    return Number(n).toLocaleString("pt-BR", {
+      maximumFractionDigits: digits,
+    });
+  }
+  function pct(p) {
+    if (p === null || p === undefined) return "—";
+    return `${(p * 100).toFixed(1)}%`;
+  }
+  function ms(n) {
+    if (n === null || n === undefined) return "—";
+    if (n >= 1000) return `${(n / 1000).toFixed(1)}s`;
+    return `${n}ms`;
+  }
+  function rel(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    const diff = (Date.now() - d.getTime()) / 1000;
+    if (diff < 60) return `${Math.round(diff)}s atrás`;
+    if (diff < 3600) return `${Math.round(diff / 60)}min atrás`;
+    if (diff < 86400) return `${Math.round(diff / 3600)}h atrás`;
+    return d.toLocaleDateString("pt-BR");
+  }
+
+  function showLogin(msg) {
+    $("adm-login").hidden = false;
+    $("adm-dash").hidden = true;
+    if (msg) {
+      $("adm-err").textContent = msg;
+      $("adm-err").hidden = false;
+    }
+  }
+
+  function showDash() {
+    $("adm-login").hidden = true;
+    $("adm-dash").hidden = false;
+  }
+
+  // ---------- Render helpers ----------
+
+  function renderHealth(h) {
+    const items = [
+      ["postgres", "Postgres", h.postgres?.ok],
+      ["redis", "Redis", h.redis?.ok],
+      ["celery", "Celery", h.celery?.ok],
+    ];
+    let html = items
+      .map(
+        ([k, label, ok]) =>
+          `<li class="adm-h-item ${ok ? "ok" : "err"}">
+            <span class="adm-h-dot"></span>
+            <span>${label}</span>
+            <span class="mono adm-h-meta">${ok ? "ok" : "down"}</span>
+          </li>`
+      )
+      .join("");
+    if (Array.isArray(h.llm_budget)) {
+      for (const p of h.llm_budget) {
+        const used = p.used || 0;
+        const cap = p.cap || 0;
+        const exhausted = p.exhausted;
+        html += `<li class="adm-h-item ${exhausted ? "err" : "ok"}">
+          <span class="adm-h-dot"></span>
+          <span>LLM · ${p.provider}</span>
+          <span class="mono adm-h-meta">${fmt(used)} / ${fmt(cap)}</span>
+        </li>`;
+      }
+    }
+    $("adm-health").innerHTML = html;
+  }
+
+  function renderTimeseries(ts) {
+    const points = ts.points || [];
+    if (!points.length) {
+      $("adm-ts").innerHTML = '<p class="adm-empty">sem dados no período</p>';
+      return;
+    }
+    const max = Math.max(1, ...points.map((p) => p.total));
+    const w = 100 / points.length;
+    const html = points
+      .map((p) => {
+        const h = (p.total / max) * 100;
+        const fh = p.total ? (p.fraud / p.total) * h : 0;
+        const date = new Date(p.ts).toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+        });
+        return `<div class="adm-bar-col" style="width:${w}%">
+          <div class="adm-bar-bg" style="height:${h}%">
+            <div class="adm-bar-fraud" style="height:${
+              p.total ? (p.fraud / p.total) * 100 : 0
+            }%"></div>
+          </div>
+          <span class="mono adm-bar-label">${date}</span>
+          <span class="mono adm-bar-count">${p.total}</span>
+        </div>`;
+      })
+      .join("");
+    $("adm-ts").innerHTML = html;
+  }
+
+  function renderBars(elId, items, labelKey, countKey) {
+    if (!items?.length) {
+      $(elId).innerHTML = '<li class="adm-empty">sem dados</li>';
+      return;
+    }
+    const max = Math.max(1, ...items.map((i) => i[countKey] || 0));
+    $(elId).innerHTML = items
+      .map((i) => {
+        const w = ((i[countKey] || 0) / max) * 100;
+        return `<li class="adm-bar-row">
+          <span class="adm-bar-row-label">${i[labelKey]}</span>
+          <span class="adm-bar-row-track"><span class="adm-bar-row-fill" style="width:${w}%"></span></span>
+          <span class="mono adm-bar-row-count">${fmt(i[countKey])}</span>
+        </li>`;
+      })
+      .join("");
+  }
+
+  function renderTable(elId, headers, rows) {
+    if (!rows?.length) {
+      $(elId).innerHTML = `<thead><tr>${headers
+        .map((h) => `<th>${h}</th>`)
+        .join("")}</tr></thead><tbody><tr><td colspan="${
+        headers.length
+      }" class="adm-empty">sem dados</td></tr></tbody>`;
+      return;
+    }
+    $(elId).innerHTML =
+      `<thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead>` +
+      `<tbody>${rows
+        .map(
+          (r) =>
+            `<tr>${r
+              .map(
+                (c, idx) =>
+                  `<td${idx === 0 ? ' class="adm-td-mono"' : ""}>${c}</td>`
+              )
+              .join("")}</tr>`
+        )
+        .join("")}</tbody>`;
+  }
+
+  function vBadge(v) {
+    const klass = v === "FRAUDE" ? "fraude" : v === "SUSPEITO" ? "suspeito" : "seguro";
+    return `<span class="adm-badge ${klass}">${v}</span>`;
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[c]));
+  }
+
+  // ---------- Loaders ----------
+
+  async function loadAll() {
+    try {
+      const [overview, health, ts, vrd, secEv, topAll, topFraud, keys, recent] =
+        await Promise.all([
+          api("/safelink/v1/admin/metrics/overview"),
+          api("/safelink/v1/admin/metrics/health"),
+          api("/safelink/v1/admin/metrics/timeseries?bucket=day&days=7"),
+          api("/safelink/v1/admin/metrics/veredictos?days=7"),
+          api("/safelink/v1/admin/metrics/security?days=30"),
+          api("/safelink/v1/admin/metrics/top-domains?kind=all&days=7&limit=10"),
+          api("/safelink/v1/admin/metrics/top-domains?kind=fraude&days=30&limit=10"),
+          api("/safelink/v1/admin/metrics/api-keys?days=30"),
+          api("/safelink/v1/admin/metrics/recent?limit=50"),
+        ]);
+
+      // KPIs
+      $("adm-dash").querySelector('[data-k="total24"]').textContent = fmt(overview.totals.last_24h);
+      $("adm-dash").querySelector('[data-k="totalAll"]').textContent = `total: ${fmt(overview.totals.all_time)}`;
+      $("adm-dash").querySelector('[data-k="fraud24"]').textContent = fmt(overview.fraud_count_24h);
+      $("adm-dash").querySelector('[data-k="fraudPct"]').textContent = pct(overview.fraud_rate_24h);
+      $("adm-dash").querySelector('[data-k="cachePct"]').textContent = pct(overview.cache_hit_rate_24h);
+      $("adm-dash").querySelector('[data-k="p95"]').textContent = ms(overview.latency_ms_24h.p95);
+      $("adm-dash").querySelector('[data-k="latMeta"]').textContent =
+        `p50 ${ms(overview.latency_ms_24h.p50)} · p99 ${ms(overview.latency_ms_24h.p99)}`;
+
+      renderHealth(health);
+      renderTimeseries(ts);
+
+      renderBars("adm-vrd", vrd.veredictos, "veredito", "count");
+
+      const secItems = Object.entries(secEv.summary).map(([k, v]) => ({
+        kind: k.replace(/_/g, " "),
+        total: v.total,
+      }));
+      renderBars("adm-sec", secItems, "kind", "total");
+
+      renderTable(
+        "adm-top-all",
+        ["domínio", "checks", "última", "prob média"],
+        topAll.items.map((i) => [
+          escapeHtml(i.domain),
+          fmt(i.count),
+          rel(i.last_seen),
+          pct(i.avg_prob),
+        ])
+      );
+
+      renderTable(
+        "adm-top-fraud",
+        ["domínio", "fraudes", "última", "prob média"],
+        topFraud.items.map((i) => [
+          escapeHtml(i.domain),
+          fmt(i.count),
+          rel(i.last_seen),
+          pct(i.avg_prob),
+        ])
+      );
+
+      renderTable(
+        "adm-keys",
+        ["nome", "owner", "uso 30d", "últ. uso", "status"],
+        keys.items.map((k) => [
+          escapeHtml(k.name),
+          escapeHtml(k.owner ?? "—"),
+          fmt(k.count_period),
+          rel(k.last_used_at || k.last_request_in_period),
+          k.is_active
+            ? '<span class="adm-badge seguro">ativa</span>'
+            : '<span class="adm-badge fraude">revogada</span>',
+        ])
+      );
+
+      renderTable(
+        "adm-recent",
+        ["url", "veredito", "risco", "prob", "tempo", "quando"],
+        recent.items.map((r) => [
+          escapeHtml(r.url.length > 60 ? r.url.slice(0, 60) + "…" : r.url),
+          vBadge(r.veredito),
+          escapeHtml(r.nivel_risco),
+          pct(r.probabilidade_fraude),
+          r.cache_hit ? "cache" : ms(r.duracao_ms),
+          rel(r.created_at),
+        ])
+      );
+
+      $("adm-updated").textContent = `atualizado ${new Date().toLocaleTimeString("pt-BR")}`;
+    } catch (err) {
+      if (err.message === "forbidden" || err.message === "no_key") {
+        clearKey();
+        showLogin("master key inválida ou expirada.");
+      } else if (err.message === "rate_limited") {
+        $("adm-updated").textContent = "rate-limited — tente em 1 minuto.";
+      } else {
+        $("adm-updated").textContent = `erro: ${err.message}`;
+      }
+    }
+  }
+
+  // ---------- Wire up ----------
+
+  $("adm-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const v = $("adm-key").value.trim();
+    if (!v) return;
+    setKey(v);
+    $("adm-err").hidden = true;
+    // valida via 1 chamada
+    try {
+      await api("/safelink/v1/admin/metrics/overview");
+      showDash();
+      loadAll();
+      startAutoRefresh();
+    } catch (err) {
+      clearKey();
+      showLogin(err.message === "forbidden" ? "chave inválida." : `erro: ${err.message}`);
+    }
+  });
+
+  $("adm-refresh").addEventListener("click", () => loadAll());
+
+  $("adm-logout").addEventListener("click", () => {
+    clearKey();
+    location.reload();
+  });
+
+  let refreshTimer = null;
+  function startAutoRefresh() {
+    if (refreshTimer) clearInterval(refreshTimer);
+    refreshTimer = setInterval(() => loadAll(), 30000);
+  }
+
+  // boot
+  if (getKey()) {
+    showDash();
+    loadAll();
+    startAutoRefresh();
+  } else {
+    showLogin();
+  }
+</script>
+
+<style>
+  .adm-main {
+    background: #0a1518;
+    color: #f5f1e7;
+    color-scheme: dark;
+    min-height: 100svh;
+    padding: 8rem 0 6rem;
+    font-feature-settings: "ss01" on, "cv01" on;
+  }
+  .mono {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .adm-tag { margin-bottom: 0.5rem; }
+  .adm-title { font-size: 2rem; font-weight: 600; margin: 0 0 1.5rem; letter-spacing: -0.02em; }
+
+  /* Login */
+  .adm-login-inner { max-width: 520px; padding: 2rem 0; }
+  .adm-help { opacity: 0.75; line-height: 1.6; margin-bottom: 1.5rem; }
+  .adm-help code { background: rgba(255,255,255,0.08); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
+  .adm-form { display: flex; gap: 0.75rem; }
+  .adm-form input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: inherit;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.15s;
+  }
+  .adm-form input:focus { border-color: oklch(0.78 0.14 175); }
+  .adm-submit, .adm-btn {
+    background: oklch(0.78 0.14 175);
+    color: #0a1518;
+    border: 0;
+    padding: 0.85rem 1.4rem;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .adm-btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+  .adm-btn-ghost {
+    background: transparent;
+    color: inherit;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .adm-err { color: oklch(0.7 0.18 25); margin-top: 1rem; font-size: 0.9rem; }
+
+  /* Bar */
+  .adm-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+  .adm-bar-actions { display: flex; gap: 0.5rem; align-items: center; }
+  .adm-meta { opacity: 0.5; }
+
+  /* Grid + cards */
+  .adm-grid { display: grid; gap: 1rem; }
+  .adm-kpis { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 2rem; }
+  .adm-grid-2 { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+  .adm-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 1.25rem 1.4rem;
+  }
+  .adm-card-label { margin: 0; }
+  .adm-card-value { font-size: 2.2rem; font-weight: 600; margin: 0.4rem 0 0.2rem; letter-spacing: -0.02em; }
+  .adm-card-meta { margin: 0; opacity: 0.55; font-size: 0.72rem; }
+
+  /* Sections */
+  .adm-section {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+  .adm-h2 { font-size: 1rem; font-weight: 600; margin: 0 0 1rem; opacity: 0.85; }
+
+  /* Health */
+  .adm-health { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .adm-h-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 0.9rem; }
+  .adm-h-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .adm-h-item.ok .adm-h-dot { background: oklch(0.78 0.14 175); box-shadow: 0 0 6px oklch(0.78 0.14 175 / 0.6); }
+  .adm-h-item.err .adm-h-dot { background: oklch(0.7 0.18 25); }
+  .adm-h-meta { margin-left: auto; opacity: 0.6; font-size: 0.7rem; }
+
+  /* Timeseries chart */
+  .adm-chart { display: flex; align-items: flex-end; gap: 4px; height: 180px; padding-top: 1rem; }
+  .adm-bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; height: 100%; }
+  .adm-bar-bg {
+    width: 100%;
+    background: oklch(0.78 0.14 175 / 0.35);
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    min-height: 2px;
+    flex: 0 0 auto;
+    align-self: stretch;
+    transition: height 0.3s;
+  }
+  .adm-bar-fraud {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: oklch(0.7 0.18 25);
+    border-radius: 0;
+  }
+  .adm-bar-label, .adm-bar-count { font-size: 0.65rem; opacity: 0.55; }
+
+  /* Bars (veredictos / segurança) */
+  .adm-bars { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+  .adm-bar-row { display: grid; grid-template-columns: 130px 1fr 60px; align-items: center; gap: 0.75rem; font-size: 0.9rem; }
+  .adm-bar-row-label { opacity: 0.85; }
+  .adm-bar-row-track { background: rgba(255,255,255,0.06); height: 8px; border-radius: 4px; overflow: hidden; }
+  .adm-bar-row-fill { display: block; height: 100%; background: oklch(0.78 0.14 175); }
+  .adm-bar-row-count { text-align: right; opacity: 0.7; font-size: 0.8rem; }
+
+  /* Table */
+  .adm-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .adm-table th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-weight: 500;
+    opacity: 0.6;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .adm-table td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+  .adm-td-mono { font-family: ui-monospace, monospace; font-size: 0.85rem; opacity: 0.9; }
+  .adm-empty { opacity: 0.5; padding: 1rem 0.75rem; font-size: 0.85rem; text-align: center; }
+
+  /* Badges */
+  .adm-badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; }
+  .adm-badge.seguro { background: oklch(0.78 0.14 175 / 0.2); color: oklch(0.85 0.14 175); }
+  .adm-badge.suspeito { background: oklch(0.78 0.16 90 / 0.2); color: oklch(0.85 0.16 90); }
+  .adm-badge.fraude { background: oklch(0.7 0.18 25 / 0.2); color: oklch(0.78 0.18 25); }
+
+  @media (max-width: 640px) {
+    .adm-main { padding: 6rem 0 4rem; }
+    .adm-bar-row { grid-template-columns: 100px 1fr 50px; }
+  }
+</style>

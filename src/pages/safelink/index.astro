@@ -365,10 +365,15 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 
 <style>
   .safelink-main {
+    /* Mesmos tokens do hero para que o espaço sob o header (e qualquer
+       gap entre seções) fique escuro, sem barra clara em light mode. */
+    --bg: oklch(0.11 0.012 210);
+    --bg-elev: oklch(0.15 0.015 205);
+    --fg: oklch(0.97 0.008 85);
     background: var(--bg);
     color: var(--fg);
+    color-scheme: dark;
     min-height: 100svh;
-    padding-top: 6rem;
   }
 
   .sr-only {
@@ -382,7 +387,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
   /* Hero ------------------------------------------------------------ */
   .safelink-hero {
     position: relative;
-    padding: 4rem 0 5rem;
+    padding: 10rem 0 5rem;
     isolation: isolate;
 
     /* Hero sempre escuro — independente do tema da página, igual à
