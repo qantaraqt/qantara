@@ -1,0 +1,565 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.br";
+---
+
+<Base
+  title="Qantara · SafeLink — verifique um link antes de clicar"
+  description="Análise técnica de URLs em até 60 segundos. Detecta sites de fraude, clonagem de cartão e phishing. Grátis, sem cadastro, sem rastreamento."
+>
+  <main class="safelink-main">
+    <section class="safelink-hero">
+      <div class="u-container">
+        <p class="mono kicker">
+          <span class="kicker-sigil">qantara</span>
+          <span class="kicker-sep">·</span>
+          <span class="kicker-tool">safelink</span>
+        </p>
+
+        <h1 class="display title">
+          Verifique um link<br />antes de clicar.
+        </h1>
+
+        <p class="lede">
+          Análise técnica completa em até sessenta segundos. Avaliamos
+          dezessete sinais — domínio, certificado, reputação em
+          antivírus, gateways de pagamento, presença pública e mais —
+          para indicar se um endereço apresenta padrões de fraude.
+        </p>
+
+        <form id="sl-form" class="sl-form" novalidate>
+          <label class="sr-only" for="sl-url">Endereço a verificar</label>
+          <input
+            id="sl-url"
+            name="url"
+            type="url"
+            inputmode="url"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="https://"
+            required
+          />
+          <button type="submit" class="sl-submit">
+            <span class="sl-submit-label">verificar</span>
+            <span class="sl-submit-arrow" aria-hidden="true">→</span>
+          </button>
+        </form>
+
+        <p class="mono meta">
+          gratuito · sem cadastro · sem rastreamento
+        </p>
+      </div>
+    </section>
+
+    <section id="sl-result" class="sl-result" hidden aria-live="polite">
+      <div class="u-container">
+        <div class="sl-result-inner">
+          <p class="mono sl-result-meta" data-meta></p>
+
+          <h2 class="display sl-result-title" data-title></h2>
+          <p class="sl-result-subtitle" data-subtitle></p>
+
+          <div class="sl-result-prob" data-prob-wrap hidden>
+            <div class="sl-result-prob-bar">
+              <div class="sl-result-prob-fill" data-prob-fill></div>
+            </div>
+            <p class="mono sl-result-prob-text" data-prob-text></p>
+          </div>
+
+          <ol class="sl-motivos" data-motivos></ol>
+
+          <details class="sl-tech">
+            <summary>análise técnica completa</summary>
+            <pre class="mono" data-tech></pre>
+          </details>
+
+          <div class="sl-actions">
+            <button type="button" class="sl-action" data-share>
+              compartilhar resultado
+            </button>
+            <button type="button" class="sl-action" data-restart>
+              verificar outro link
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="safelink-camadas">
+      <div class="u-container">
+        <p class="mono section-eyebrow">o que analisamos</p>
+        <ul class="camadas-grid">
+          <li><span class="num">01</span><span>Idade do domínio e registrar (WHOIS)</span></li>
+          <li><span class="num">02</span><span>Reputação em até 92 motores antivírus (VirusTotal)</span></li>
+          <li><span class="num">03</span><span>Lista do Google Safe Browsing</span></li>
+          <li><span class="num">04</span><span>URLhaus — base pública da abuse.ch</span></li>
+          <li><span class="num">05</span><span>Histórico no Wayback Machine</span></li>
+          <li><span class="num">06</span><span>Certificado SSL e idade de emissão</span></li>
+          <li><span class="num">07</span><span>Provedor, ASN e país de hospedagem</span></li>
+          <li><span class="num">08</span><span>Gateways de pagamento carregados</span></li>
+          <li><span class="num">09</span><span>Formulário de cartão sem proteção</span></li>
+          <li><span class="num">10</span><span>CNPJ e situação na Receita Federal</span></li>
+          <li><span class="num">11</span><span>Reputação no Reclame Aqui</span></li>
+          <li><span class="num">12</span><span>Redes sociais e WhatsApp vinculados</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="safelink-rodape">
+      <div class="u-container rodape-inner">
+        <p>
+          SafeLink é uma ferramenta da
+          <a href="/">Qantara</a>, estúdio independente de engenharia
+          de software. Para integrar a análise em sua plataforma via
+          API, <a href="/safelink/api">consulte a documentação</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script is:inline define:vars={{ apiBase }}>
+  const form = document.getElementById("sl-form");
+  const result = document.getElementById("sl-result");
+  const submitBtn = form?.querySelector(".sl-submit");
+  const labelEl = form?.querySelector(".sl-submit-label");
+
+  const $ = (sel) => result.querySelector(sel);
+  const motivosEl = $("[data-motivos]");
+  const techEl = $("[data-tech]");
+  const titleEl = $("[data-title]");
+  const subEl = $("[data-subtitle]");
+  const metaEl = $("[data-meta]");
+  const probWrap = $("[data-prob-wrap]");
+  const probFill = $("[data-prob-fill]");
+  const probText = $("[data-prob-text]");
+
+  const share = $("[data-share]");
+  const restart = $("[data-restart]");
+
+  function setBusy(busy) {
+    if (!submitBtn) return;
+    submitBtn.disabled = busy;
+    if (labelEl) labelEl.textContent = busy ? "verificando" : "verificar";
+  }
+
+  function render(data) {
+    const codigo = data.codigo || "SEGURO";
+    result.dataset.codigo = codigo;
+    metaEl.textContent =
+      `${data.dominio || data.url} · ${data.cache_hit ? "cache" : "análise nova"}` +
+      (data.duracao_ms ? ` · ${(data.duracao_ms / 1000).toFixed(1)}s` : "");
+    titleEl.textContent = data.titulo;
+    subEl.textContent = data.subtitulo;
+
+    if (typeof data.probabilidade === "number") {
+      const pct = Math.round(data.probabilidade * 100);
+      probWrap.hidden = false;
+      probFill.style.width = pct + "%";
+      probText.textContent = `probabilidade de fraude: ${pct}%`;
+    } else {
+      probWrap.hidden = true;
+    }
+
+    motivosEl.innerHTML = "";
+    (data.motivos || []).forEach((m, i) => {
+      const li = document.createElement("li");
+      li.dataset.peso = m.peso || "info";
+      li.innerHTML =
+        `<span class="motivo-num mono">${String(i + 1).padStart(2, "0")}</span>` +
+        `<div class="motivo-body"><h3>${m.titulo}</h3><p>${m.descricao}</p></div>`;
+      motivosEl.appendChild(li);
+    });
+
+    if (data.analise_tecnica && data.analise_tecnica.length) {
+      const lines = data.analise_tecnica.map((row) => {
+        const k = row.chave.padEnd(26, " ");
+        let v = row.valor;
+        if (Array.isArray(v)) v = v.length ? v.join(", ") : "—";
+        return `${k}: ${v}`;
+      });
+      techEl.textContent = lines.join("\n");
+    } else {
+      techEl.textContent = "—";
+    }
+
+    result.hidden = false;
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function renderError(msg) {
+    result.dataset.codigo = "ERRO";
+    metaEl.textContent = "";
+    titleEl.textContent = "Não foi possível verificar";
+    subEl.textContent = msg;
+    motivosEl.innerHTML = "";
+    techEl.textContent = "";
+    probWrap.hidden = true;
+    result.hidden = false;
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  form?.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const url = new FormData(form).get("url")?.toString().trim();
+    if (!url) return;
+    setBusy(true);
+    try {
+      const r = await fetch(`${apiBase}/safelink/v1/public/check`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      const data = await r.json();
+      if (!r.ok) {
+        renderError(data?.detail || "Erro inesperado. Tente novamente.");
+        return;
+      }
+      render(data);
+    } catch (e) {
+      renderError("Não foi possível conectar à API. Tente novamente em instantes.");
+    } finally {
+      setBusy(false);
+    }
+  });
+
+  restart?.addEventListener("click", () => {
+    result.hidden = true;
+    form?.reset();
+    document.getElementById("sl-url")?.focus();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  share?.addEventListener("click", async () => {
+    const text = `${titleEl.textContent} — ${metaEl.textContent}`;
+    if (navigator.share) {
+      try { await navigator.share({ title: "Qantara SafeLink", text, url: location.href }); } catch {}
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(`${text}\n${location.href}`);
+      share.textContent = "copiado";
+      setTimeout(() => (share.textContent = "compartilhar resultado"), 1500);
+    }
+  });
+</script>
+
+<style>
+  .safelink-main {
+    --bg: oklch(0.11 0.012 210);
+    --bg-elev: oklch(0.15 0.015 205);
+    --fg: oklch(0.97 0.008 85);
+    --color-white: #ffffff;
+    color-scheme: dark;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100svh;
+    padding-top: 6rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+
+  /* Hero ------------------------------------------------------------ */
+  .safelink-hero {
+    padding: 4rem 0 5rem;
+  }
+
+  .kicker {
+    color: color-mix(in oklch, var(--fg) 55%, transparent);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 2rem;
+  }
+  .kicker-sigil { color: var(--color-teal); }
+  .kicker-sep { margin: 0 0.5rem; opacity: 0.5; }
+  .kicker-tool { color: color-mix(in oklch, var(--fg) 80%, transparent); }
+
+  .title {
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .lede {
+    max-width: 36rem;
+    color: color-mix(in oklch, var(--fg) 72%, transparent);
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
+    line-height: 1.55;
+    margin-bottom: 2.75rem;
+  }
+
+  /* Form ------------------------------------------------------------ */
+  .sl-form {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 42rem;
+    margin-bottom: 1rem;
+    border: 1px solid color-mix(in oklch, var(--fg) 18%, transparent);
+    background: color-mix(in oklch, var(--bg-elev) 60%, transparent);
+    border-radius: 2px;
+    transition: border-color 200ms var(--ease-emph);
+  }
+  .sl-form:focus-within {
+    border-color: var(--color-teal);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-teal) 18%, transparent);
+  }
+
+  .sl-form input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    color: var(--fg);
+    font: inherit;
+    font-size: 1rem;
+    padding: 1.1rem 1.25rem;
+    min-width: 0;
+  }
+  .sl-form input::placeholder {
+    color: color-mix(in oklch, var(--fg) 40%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+  }
+
+  .sl-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1.5rem;
+    background: var(--color-teal);
+    color: oklch(0.14 0.02 200);
+    border: 0;
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 180ms var(--ease-emph), transform 120ms;
+  }
+  .sl-submit:hover { background: oklch(0.86 0.14 172); }
+  .sl-submit:active { transform: translateY(1px); }
+  .sl-submit:disabled { opacity: 0.6; cursor: progress; }
+  .sl-submit-arrow { transition: transform 200ms; }
+  .sl-submit:hover .sl-submit-arrow { transform: translateX(3px); }
+
+  .meta {
+    color: color-mix(in oklch, var(--fg) 45%, transparent);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 640px) {
+    .sl-form { flex-direction: column; }
+    .sl-submit { padding: 1rem; justify-content: center; }
+  }
+
+  /* Resultado ------------------------------------------------------- */
+  .sl-result {
+    padding: 5rem 0 6rem;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 10%, transparent);
+  }
+
+  .sl-result-inner { max-width: 50rem; }
+
+  .sl-result-meta {
+    color: color-mix(in oklch, var(--fg) 50%, transparent);
+    font-size: 0.78rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .sl-result-title {
+    font-size: clamp(2rem, 4.5vw, 3.25rem);
+    line-height: 1.05;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .sl-result-subtitle {
+    color: color-mix(in oklch, var(--fg) 70%, transparent);
+    font-size: 1.05rem;
+    line-height: 1.55;
+    max-width: 38rem;
+    margin-bottom: 2.5rem;
+  }
+
+  /* Faixas de cor por código */
+  .sl-result[data-codigo="RISCO"] .sl-result-title { color: oklch(0.7 0.18 28); }
+  .sl-result[data-codigo="CAUTELA"] .sl-result-title { color: oklch(0.78 0.14 75); }
+  .sl-result[data-codigo="SEGURO"] .sl-result-title { color: var(--color-teal); }
+  .sl-result[data-codigo="ERRO"] .sl-result-title { color: color-mix(in oklch, var(--fg) 80%, transparent); }
+
+  /* Probabilidade --------------------------------------------------- */
+  .sl-result-prob { margin-bottom: 3rem; max-width: 30rem; }
+  .sl-result-prob-bar {
+    height: 4px;
+    background: color-mix(in oklch, var(--fg) 8%, transparent);
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+  .sl-result-prob-fill {
+    height: 100%;
+    background: var(--color-teal);
+    transition: width 600ms var(--ease-emph);
+  }
+  .sl-result[data-codigo="RISCO"] .sl-result-prob-fill { background: oklch(0.62 0.18 28); }
+  .sl-result[data-codigo="CAUTELA"] .sl-result-prob-fill { background: oklch(0.72 0.14 75); }
+
+  .sl-result-prob-text {
+    font-size: 0.78rem;
+    color: color-mix(in oklch, var(--fg) 55%, transparent);
+    letter-spacing: 0.03em;
+  }
+
+  /* Motivos --------------------------------------------------------- */
+  .sl-motivos {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .sl-motivos li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.25rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid color-mix(in oklch, var(--fg) 12%, transparent);
+  }
+  .sl-motivos li[data-peso="alto"] { border-left-color: oklch(0.62 0.18 28); }
+  .sl-motivos li[data-peso="medio"] { border-left-color: oklch(0.72 0.14 75); }
+  .sl-motivos li[data-peso="info"] { border-left-color: var(--color-teal); }
+
+  .motivo-num {
+    color: color-mix(in oklch, var(--fg) 35%, transparent);
+    font-size: 0.85rem;
+    padding-top: 0.2rem;
+  }
+  .motivo-body h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 0.4rem 0;
+    letter-spacing: -0.005em;
+  }
+  .motivo-body p {
+    color: color-mix(in oklch, var(--fg) 70%, transparent);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* Bloco técnico --------------------------------------------------- */
+  .sl-tech {
+    margin-bottom: 3rem;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 10%, transparent);
+    padding-top: 1.5rem;
+  }
+  .sl-tech summary {
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: color-mix(in oklch, var(--fg) 60%, transparent);
+    letter-spacing: 0.03em;
+    list-style: none;
+    user-select: none;
+  }
+  .sl-tech summary::before {
+    content: "▸ ";
+    display: inline-block;
+    transition: transform 200ms;
+  }
+  .sl-tech[open] summary::before { content: "▾ "; }
+  .sl-tech pre {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    background: color-mix(in oklch, var(--bg-elev) 50%, transparent);
+    border: 1px solid color-mix(in oklch, var(--fg) 10%, transparent);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: color-mix(in oklch, var(--fg) 80%, transparent);
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* Ações ----------------------------------------------------------- */
+  .sl-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .sl-action {
+    background: transparent;
+    border: 1px solid color-mix(in oklch, var(--fg) 18%, transparent);
+    color: var(--fg);
+    padding: 0.75rem 1.25rem;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 180ms, background-color 180ms;
+  }
+  .sl-action:hover {
+    border-color: var(--color-teal);
+    background: color-mix(in oklch, var(--color-teal) 8%, transparent);
+  }
+
+  /* Camadas --------------------------------------------------------- */
+  .safelink-camadas {
+    padding: 5rem 0 6rem;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 8%, transparent);
+  }
+  .section-eyebrow {
+    color: color-mix(in oklch, var(--fg) 50%, transparent);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 2.5rem;
+  }
+  .camadas-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 1.5rem 2rem;
+  }
+  .camadas-grid li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+    align-items: start;
+    padding: 1rem 0;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 8%, transparent);
+    color: color-mix(in oklch, var(--fg) 80%, transparent);
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+  .camadas-grid .num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-teal);
+  }
+
+  /* Rodapé ---------------------------------------------------------- */
+  .safelink-rodape {
+    padding: 3rem 0 5rem;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 8%, transparent);
+  }
+  .rodape-inner p {
+    color: color-mix(in oklch, var(--fg) 60%, transparent);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    max-width: 36rem;
+  }
+  .rodape-inner a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--color-teal) 50%, transparent);
+    text-underline-offset: 3px;
+  }
+  .rodape-inner a:hover { color: var(--color-teal); }
+</style>

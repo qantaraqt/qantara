@@ -9,3 +9,5 @@ dist/
 .vscode/
 .idea/
 
+# Backend SafeLink (repositório/deploy separado, vive no VPS)
+safelink-api/
