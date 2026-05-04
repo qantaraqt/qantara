@@ -1,0 +1,684 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.br";
+---
+
+<Base
+  title="Qantara SafeLink API, documentação"
+  description="Documentação completa da API SafeLink: análise de URLs, detecção de fraude, jobs assíncronos, lote, histórico e API keys."
+  minimalHeader
+>
+  <main class="docs-main">
+    <div class="u-container">
+      <header class="docs-header">
+        <p class="mono kicker">
+          <span class="kicker-tool">safelink api</span>
+        </p>
+        <h1 class="docs-title">Documentação da API</h1>
+        <p class="docs-lede">
+          A SafeLink API analisa URLs e devolve um veredito (SEGURO,
+          SUSPEITO, FRAUDE), com probabilidade de fraude, motivos
+          legíveis e dados técnicos brutos. Use o endpoint público
+          gratuito para integrações leves ou peça uma API key para
+          análises ilimitadas, lote e histórico.
+        </p>
+
+        <div class="docs-base">
+          <span class="mono base-label">base url</span>
+          <code class="mono base-url">{apiBase}</code>
+        </div>
+      </header>
+
+      <nav class="docs-toc" aria-label="Sumário">
+        <p class="mono toc-eyebrow">conteúdo</p>
+        <ol>
+          <li><a href="#visao">01. Visão geral</a></li>
+          <li><a href="#auth">02. Autenticação</a></li>
+          <li><a href="#publico">03. Endpoint público</a></li>
+          <li><a href="#analisar">04. Analisar (sync ou async)</a></li>
+          <li><a href="#tasks">05. Consultar task</a></li>
+          <li><a href="#lote">06. Lote (até 20 URLs)</a></li>
+          <li><a href="#historico">07. Histórico</a></li>
+          <li><a href="#health">08. Health</a></li>
+          <li><a href="#schemas">09. Schemas</a></li>
+          <li><a href="#erros">10. Erros e limites</a></li>
+        </ol>
+      </nav>
+
+      <section id="visao" class="docs-section">
+        <h2>01. Visão geral</h2>
+        <p>
+          A análise combina três sinais independentes: dois modelos de
+          IA via OpenRouter (Grok e Claude), heurísticas focadas no
+          mercado brasileiro (CNPJ, gateways de pagamento, idade do
+          domínio, redes sociais) e dados técnicos públicos (WHOIS,
+          VirusTotal, Google Safe Browsing, URLhaus, Wayback). O
+          consenso entre as três fontes define o veredito final.
+        </p>
+        <ul class="docs-bullets">
+          <li>JSON em todas as requisições e respostas (UTF-8).</li>
+          <li>Cache por domínio: chamadas repetidas em até 24h são instantâneas (<code>cache_hit: true</code>).</li>
+          <li>Análises novas duram entre quinze e quarenta segundos.</li>
+          <li>Suporta modo síncrono (HTTP 200) ou assíncrono (HTTP 202 + polling).</li>
+        </ul>
+      </section>
+
+      <section id="auth" class="docs-section">
+        <h2>02. Autenticação</h2>
+        <p>
+          Endpoints autenticados usam um header <code>Authorization: Bearer SEU_TOKEN</code>.
+          O endpoint público (<code>/safelink/v1/public/check</code>) não exige token,
+          mas tem rate limit por IP.
+        </p>
+        <pre class="docs-code"><code>{`Authorization: Bearer sk_live_abc123...`}</code></pre>
+        <p class="docs-note">
+          API keys são emitidas sob demanda. Escreva para
+          <a href="mailto:contato@qantara.com.br">contato@qantara.com.br</a>
+          com o caso de uso e o volume estimado.
+        </p>
+      </section>
+
+      <section id="publico" class="docs-section">
+        <h2>03. Endpoint público</h2>
+        <p class="endpoint-line">
+          <span class="method method-post">POST</span>
+          <code>/safelink/v1/public/check</code>
+        </p>
+        <p>
+          Verificação pública e gratuita, em formato simplificado (mesmo
+          formato consumido pela página <a href="/safelink">/safelink</a>).
+          Sem autenticação. Rate limit por IP. Resposta otimizada para
+          leigos: <code>codigo</code>, <code>titulo</code>, <code>subtitulo</code>,
+          <code>motivos</code> com peso humano e <code>analise_tecnica</code>
+          em formato chave-valor.
+        </p>
+
+        <p class="docs-sub">Requisição</p>
+        <pre class="docs-code"><code>{`curl -X POST ${apiBase}/safelink/v1/public/check \\
+  -H "Content-Type: application/json" \\
+  -d '{"url": "https://magazineluiza.com.br"}'`}</code></pre>
+
+        <p class="docs-sub">Resposta (200)</p>
+        <pre class="docs-code"><code>{`{
+  "codigo": "SEGURO",
+  "titulo": "Site confiável",
+  "subtitulo": "Domínio antigo, certificado válido, presença sólida.",
+  "url": "https://magazineluiza.com.br",
+  "dominio": "magazineluiza.com.br",
+  "probabilidade": 0.03,
+  "duracao_ms": 21340,
+  "cache_hit": false,
+  "motivos": [
+    {
+      "titulo": "Domínio com mais de 10 anos",
+      "descricao": "Registrado há 7842 dias. Sites de fraude raramente passam de 30 dias.",
+      "peso": "info"
+    }
+  ],
+  "analise_tecnica": [
+    { "chave": "idade_dominio_dias", "valor": 7842 },
+    { "chave": "ssl_emissor", "valor": "DigiCert" },
+    { "chave": "virustotal_malicious", "valor": 0 }
+  ]
+}`}</code></pre>
+      </section>
+
+      <section id="analisar" class="docs-section">
+        <h2>04. Analisar (sync ou async)</h2>
+        <p class="endpoint-line">
+          <span class="method method-post">POST</span>
+          <code>/safelink/v1/analisar</code>
+          <span class="badge-auth">requer api key</span>
+        </p>
+        <p>
+          Endpoint principal. Retorna 200 quando a análise termina
+          dentro do timeout síncrono (cache ou rápida) ou 202 com
+          <code>task_id</code> quando entra na fila assíncrona.
+        </p>
+
+        <p class="docs-sub">Query parameters</p>
+        <table class="docs-table">
+          <thead><tr><th>Nome</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>wait</code></td><td>boolean</td><td>true força sync, false força async, ausente = automático.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="docs-sub">Body</p>
+        <pre class="docs-code"><code>{`{
+  "url": "https://exemplo.com.br/pagar",
+  "forcar_reanalise": false
+}`}</code></pre>
+
+        <p class="docs-sub">Exemplo</p>
+        <pre class="docs-code"><code>{`curl -X POST ${apiBase}/safelink/v1/analisar \\
+  -H "Authorization: Bearer SEU_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{"url": "https://exemplo.com.br"}'`}</code></pre>
+
+        <p class="docs-sub">Resposta 200 (síncrona)</p>
+        <pre class="docs-code"><code>{`{
+  "url": "https://exemplo.com.br",
+  "dominio": "exemplo.com.br",
+  "veredito": "SUSPEITO",
+  "probabilidade_fraude": 0.62,
+  "nivel_risco": "MEDIO",
+  "motivos": [
+    "Domínio registrado há apenas 9 dias",
+    "Certificado emitido na mesma semana",
+    "Sem CNPJ visível no rodapé"
+  ],
+  "recomendacao": "Não realize pagamentos antes de confirmar o vendedor por outro canal.",
+  "detalhes": { "...": "..." },
+  "grok": { "veredito": "SUSPEITO", "confianca": 0.7, "raciocinio": "..." },
+  "claude": { "veredito": "SUSPEITO", "confianca": 0.65, "raciocinio": "..." },
+  "tecnico": {
+    "whois_idade_dias": 9,
+    "ssl_emissor": "Let's Encrypt",
+    "ssl_idade_dias": 6,
+    "virustotal_malicious": 0,
+    "asn": "AS16509",
+    "pais": "US"
+  },
+  "heuristicas": {
+    "tem_cnpj": false,
+    "tem_whatsapp": false,
+    "gateways_detectados": ["mercadopago"],
+    "score_heuristico": 0.7
+  },
+  "duracao_ms": 18234,
+  "cache_hit": false,
+  "analisado_em": "2026-05-03T14:30:00Z"
+}`}</code></pre>
+
+        <p class="docs-sub">Resposta 202 (enfileirada)</p>
+        <pre class="docs-code"><code>{`{
+  "task_id": "task_01H...",
+  "status": "PENDING",
+  "poll_url": "/safelink/v1/analise/task_01H...",
+  "estimated_seconds": 25
+}`}</code></pre>
+      </section>
+
+      <section id="tasks" class="docs-section">
+        <h2>05. Consultar task</h2>
+        <p class="endpoint-line">
+          <span class="method method-get">GET</span>
+          <code>/safelink/v1/analise/{`{task_id}`}</code>
+          <span class="badge-auth">requer api key</span>
+        </p>
+        <p>Faça polling a cada 1-2 segundos até <code>status</code> virar SUCCESS ou FAILURE.</p>
+
+        <pre class="docs-code"><code>{`curl ${apiBase}/safelink/v1/analise/task_01H... \\
+  -H "Authorization: Bearer SEU_TOKEN"`}</code></pre>
+
+        <pre class="docs-code"><code>{`{
+  "task_id": "task_01H...",
+  "status": "SUCCESS",
+  "url": "https://exemplo.com.br",
+  "created_at": "2026-05-03T14:30:00Z",
+  "finished_at": "2026-05-03T14:30:24Z",
+  "duracao_segundos": 24.1,
+  "resultado": { "...AnaliseResposta..." },
+  "erro": null,
+  "progresso": { "etapa_atual": "consenso_ia", "concluido_pct": 80 }
+}`}</code></pre>
+
+        <p class="docs-sub">Estados possíveis</p>
+        <ul class="docs-bullets">
+          <li><code>PENDING</code> — na fila</li>
+          <li><code>STARTED</code> — em execução</li>
+          <li><code>SUCCESS</code> — concluída, <code>resultado</code> preenchido</li>
+          <li><code>FAILURE</code> — falhou, <code>erro</code> contém o motivo</li>
+          <li><code>RETRY</code> — falha temporária, será retentada</li>
+        </ul>
+      </section>
+
+      <section id="lote" class="docs-section">
+        <h2>06. Lote (até 20 URLs)</h2>
+        <p class="endpoint-line">
+          <span class="method method-post">POST</span>
+          <code>/safelink/v1/lote</code>
+          <span class="badge-auth">requer api key</span>
+        </p>
+        <p>Análise paralela. Retorna por URL: sucesso (AnaliseResposta) ou objeto com <code>erro</code>.</p>
+
+        <pre class="docs-code"><code>{`curl -X POST ${apiBase}/safelink/v1/lote \\
+  -H "Authorization: Bearer SEU_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "urls": [
+      "https://magazineluiza.com.br",
+      "https://americanas.com.br"
+    ],
+    "forcar_reanalise": false
+  }'`}</code></pre>
+
+        <pre class="docs-code"><code>{`{
+  "total": 2,
+  "sucesso": 2,
+  "falha": 0,
+  "resultados": [ { "...AnaliseResposta..." }, { "...AnaliseResposta..." } ]
+}`}</code></pre>
+      </section>
+
+      <section id="historico" class="docs-section">
+        <h2>07. Histórico</h2>
+        <p class="endpoint-line">
+          <span class="method method-get">GET</span>
+          <code>/safelink/v1/historico</code>
+          <span class="badge-auth">requer api key</span>
+        </p>
+        <p>Lista análises feitas pela sua API key, com filtros e paginação.</p>
+
+        <p class="docs-sub">Query parameters</p>
+        <table class="docs-table">
+          <thead><tr><th>Nome</th><th>Tipo</th><th>Default</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>pagina</code></td><td>int</td><td>1</td><td>Página, mínimo 1.</td></tr>
+            <tr><td><code>por_pagina</code></td><td>int</td><td>20</td><td>Itens por página, máximo 100.</td></tr>
+            <tr><td><code>veredito</code></td><td>string</td><td>—</td><td>SEGURO, SUSPEITO ou FRAUDE.</td></tr>
+            <tr><td><code>dominio</code></td><td>string</td><td>—</td><td>Filtro por domínio (até 255 caracteres).</td></tr>
+          </tbody>
+        </table>
+
+        <pre class="docs-code"><code>{`curl "${apiBase}/safelink/v1/historico?pagina=1&por_pagina=50&veredito=FRAUDE" \\
+  -H "Authorization: Bearer SEU_TOKEN"`}</code></pre>
+      </section>
+
+      <section id="health" class="docs-section">
+        <h2>08. Health</h2>
+        <p class="endpoint-line">
+          <span class="method method-get">GET</span>
+          <code>/healthz</code>
+          <span class="badge-public">público</span>
+        </p>
+        <p>Retorna 200 quando a API está de pé. Sem corpo.</p>
+
+        <p class="endpoint-line" style="margin-top:1.5rem;">
+          <span class="method method-get">GET</span>
+          <code>/health</code>
+          <span class="badge-public">público</span>
+        </p>
+        <p>Healthcheck detalhado: status do Postgres, Redis, fila Celery.</p>
+      </section>
+
+      <section id="schemas" class="docs-section">
+        <h2>09. Schemas</h2>
+
+        <p class="docs-sub">AnalisarRequest</p>
+        <table class="docs-table">
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>url</code></td><td>string (uri)</td><td>sim</td><td>URL completa, com http/https. Máximo 2083 caracteres.</td></tr>
+            <tr><td><code>forcar_reanalise</code></td><td>boolean</td><td>não</td><td>Ignora cache se true. Default false.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="docs-sub">AnaliseResposta</p>
+        <table class="docs-table">
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>veredito</code></td><td>SEGURO, SUSPEITO, FRAUDE</td><td>Conclusão final.</td></tr>
+            <tr><td><code>probabilidade_fraude</code></td><td>number 0..1</td><td>Probabilidade combinada.</td></tr>
+            <tr><td><code>nivel_risco</code></td><td>BAIXO, MEDIO, ALTO, CRITICO</td><td>Faixa interpretada.</td></tr>
+            <tr><td><code>motivos</code></td><td>array de string</td><td>Motivos legíveis para o usuário final.</td></tr>
+            <tr><td><code>recomendacao</code></td><td>string</td><td>Recomendação prática.</td></tr>
+            <tr><td><code>grok</code>, <code>claude</code></td><td>IAResultado</td><td>Veredito de cada modelo (pode ser null se indisponível).</td></tr>
+            <tr><td><code>tecnico</code></td><td>TecnicoResultado</td><td>WHOIS, SSL, ASN, VirusTotal etc.</td></tr>
+            <tr><td><code>heuristicas</code></td><td>HeuristicasResultado</td><td>CNPJ, WhatsApp, gateways, score.</td></tr>
+            <tr><td><code>duracao_ms</code></td><td>integer</td><td>Tempo total da análise.</td></tr>
+            <tr><td><code>cache_hit</code></td><td>boolean</td><td>Se veio do cache de 24h.</td></tr>
+            <tr><td><code>analisado_em</code></td><td>datetime</td><td>ISO 8601 UTC.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="docs-sub">LoteRequest</p>
+        <table class="docs-table">
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>urls</code></td><td>array de uri</td><td>sim</td><td>De 1 a 20 URLs.</td></tr>
+            <tr><td><code>forcar_reanalise</code></td><td>boolean</td><td>não</td><td>Ignora cache em todas. Default false.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="docs-sub">TaskAceita</p>
+        <table class="docs-table">
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>task_id</code></td><td>string</td><td>Use no GET /safelink/v1/analise/{`{task_id}`}.</td></tr>
+            <tr><td><code>status</code></td><td>enum</td><td>PENDING, STARTED, SUCCESS, FAILURE, RETRY.</td></tr>
+            <tr><td><code>poll_url</code></td><td>string</td><td>URL pronta para fazer polling.</td></tr>
+            <tr><td><code>estimated_seconds</code></td><td>integer</td><td>Estimativa, não é garantia.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="docs-sub">HistoricoItem</p>
+        <table class="docs-table">
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>id</code></td><td>integer</td><td>ID interno.</td></tr>
+            <tr><td><code>url</code>, <code>dominio</code></td><td>string</td><td>—</td></tr>
+            <tr><td><code>veredito</code></td><td>SEGURO, SUSPEITO, FRAUDE</td><td>—</td></tr>
+            <tr><td><code>probabilidade_fraude</code></td><td>number</td><td>0..1</td></tr>
+            <tr><td><code>nivel_risco</code></td><td>BAIXO, MEDIO, ALTO, CRITICO</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="erros" class="docs-section">
+        <h2>10. Erros e limites</h2>
+
+        <p class="docs-sub">Códigos HTTP</p>
+        <table class="docs-table">
+          <thead><tr><th>Código</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td>200</td><td>Sucesso, análise concluída ou cache.</td></tr>
+            <tr><td>202</td><td>Análise enfileirada, consulte via task_id.</td></tr>
+            <tr><td>401</td><td>API key ausente ou inválida.</td></tr>
+            <tr><td>403</td><td>API key revogada ou sem permissão.</td></tr>
+            <tr><td>422</td><td>Body inválido (URL malformada, campos faltando).</td></tr>
+            <tr><td>429</td><td>Rate limit excedido.</td></tr>
+            <tr><td>500</td><td>Erro interno. Tente novamente, ou abra issue.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="docs-sub">Erro 422 (exemplo)</p>
+        <pre class="docs-code"><code>{`{
+  "detail": [
+    {
+      "type": "url_parsing",
+      "loc": ["body", "url"],
+      "msg": "Input should be a valid URL",
+      "input": "ht!tp://broken"
+    }
+  ]
+}`}</code></pre>
+
+        <p class="docs-sub">Limites</p>
+        <ul class="docs-bullets">
+          <li>Endpoint público: 30 chamadas por hora por IP.</li>
+          <li>API key padrão: 1.000 chamadas por dia, 10 por minuto.</li>
+          <li>Lote: máximo 20 URLs por requisição.</li>
+          <li>Cache de 24h por domínio (use <code>forcar_reanalise</code> para ignorar).</li>
+        </ul>
+      </section>
+
+      <footer class="docs-footer">
+        <p>
+          Especificação OpenAPI completa:
+          <a href={`${apiBase}/openapi.json`}>{apiBase}/openapi.json</a>
+          ·
+          <a href={`${apiBase}/docs`}>Swagger UI</a>
+          ·
+          <a href={`${apiBase}/redoc`}>ReDoc</a>
+        </p>
+        <p>
+          Voltar para a <a href="/safelink">ferramenta pública</a> ou
+          para <a href="/">Qantara</a>.
+        </p>
+      </footer>
+    </div>
+  </main>
+</Base>
+
+<style>
+  /* Force light theme on docs */
+  .docs-main {
+    color-scheme: light;
+    --bg: oklch(0.99 0.005 95);
+    --bg-elev: oklch(0.96 0.008 95);
+    --fg: oklch(0.18 0.02 200);
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100svh;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .u-container { max-width: 56rem; }
+
+  /* Header ----------------------------------------------------------- */
+  .docs-header { padding: 2rem 0 4rem; }
+  .kicker {
+    color: color-mix(in oklch, var(--fg) 55%, transparent);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 1.5rem;
+  }
+  .kicker-tool { color: var(--color-teal); }
+
+  .docs-title {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    margin: 0 0 1.25rem 0;
+  }
+  .docs-lede {
+    max-width: 38rem;
+    color: color-mix(in oklch, var(--fg) 75%, transparent);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0 0 2.5rem 0;
+  }
+  .docs-base {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: var(--bg-elev);
+    border: 1px solid color-mix(in oklch, var(--fg) 12%, transparent);
+    border-radius: 2px;
+  }
+  .base-label {
+    font-size: 0.72rem;
+    color: color-mix(in oklch, var(--fg) 50%, transparent);
+    letter-spacing: 0.05em;
+  }
+  .base-url {
+    font-size: 0.92rem;
+    color: var(--fg);
+  }
+
+  /* TOC -------------------------------------------------------------- */
+  .docs-toc {
+    padding: 2rem 0;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 10%, transparent);
+    border-bottom: 1px solid color-mix(in oklch, var(--fg) 10%, transparent);
+    margin-bottom: 3rem;
+  }
+  .toc-eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: color-mix(in oklch, var(--fg) 50%, transparent);
+    margin-bottom: 1rem;
+  }
+  .docs-toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.5rem 1.5rem;
+  }
+  .docs-toc a {
+    color: color-mix(in oklch, var(--fg) 80%, transparent);
+    text-decoration: none;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding: 0.25rem 0;
+    display: inline-block;
+    transition: color 150ms;
+  }
+  .docs-toc a:hover { color: var(--color-teal); }
+
+  /* Sections --------------------------------------------------------- */
+  .docs-section {
+    padding: 2.5rem 0 3rem;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 8%, transparent);
+    scroll-margin-top: 5rem;
+  }
+  .docs-section h2 {
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.25rem 0;
+  }
+  .docs-section p {
+    color: color-mix(in oklch, var(--fg) 78%, transparent);
+    line-height: 1.65;
+    margin: 0 0 1rem 0;
+    max-width: 42rem;
+  }
+  .docs-sub {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--fg) 50%, transparent);
+    margin: 1.75rem 0 0.6rem 0 !important;
+  }
+  .docs-bullets {
+    margin: 0.5rem 0 1rem 0;
+    padding-left: 1.25rem;
+    color: color-mix(in oklch, var(--fg) 78%, transparent);
+    line-height: 1.7;
+  }
+  .docs-bullets li { margin-bottom: 0.35rem; }
+  .docs-note {
+    padding: 1rem 1.25rem;
+    border-left: 2px solid var(--color-teal);
+    background: color-mix(in oklch, var(--color-teal) 6%, transparent);
+    margin: 1rem 0 !important;
+  }
+
+  /* Endpoint --------------------------------------------------------- */
+  .endpoint-line {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 0 0 1rem 0 !important;
+    max-width: none !important;
+  }
+  .endpoint-line code {
+    font-size: 1rem;
+    padding: 0.35rem 0.65rem;
+    background: var(--bg-elev);
+    border: 1px solid color-mix(in oklch, var(--fg) 12%, transparent);
+    border-radius: 2px;
+  }
+  .method {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.3rem 0.55rem;
+    border-radius: 2px;
+  }
+  .method-get { background: oklch(0.92 0.05 200); color: oklch(0.3 0.1 220); }
+  .method-post { background: oklch(0.92 0.06 145); color: oklch(0.3 0.12 145); }
+  .badge-auth, .badge-public {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+  }
+  .badge-auth {
+    background: oklch(0.94 0.05 75);
+    color: oklch(0.4 0.12 75);
+  }
+  .badge-public {
+    background: color-mix(in oklch, var(--fg) 8%, transparent);
+    color: color-mix(in oklch, var(--fg) 60%, transparent);
+  }
+
+  /* Code blocks ------------------------------------------------------ */
+  .docs-code {
+    margin: 0.6rem 0 1.25rem 0;
+    padding: 1.1rem 1.25rem;
+    background: oklch(0.97 0.005 95);
+    border: 1px solid color-mix(in oklch, var(--fg) 10%, transparent);
+    border-radius: 2px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: oklch(0.22 0.02 200);
+    white-space: pre;
+    font-family: var(--font-mono);
+  }
+  .docs-code code {
+    background: transparent;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    color: inherit;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--bg-elev);
+    padding: 0.1rem 0.35rem;
+    border-radius: 2px;
+    border: 1px solid color-mix(in oklch, var(--fg) 8%, transparent);
+  }
+
+  /* Tables ----------------------------------------------------------- */
+  .docs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.6rem 0 1.5rem 0;
+    font-size: 0.92rem;
+  }
+  .docs-table th, .docs-table td {
+    text-align: left;
+    padding: 0.7rem 0.85rem;
+    border-bottom: 1px solid color-mix(in oklch, var(--fg) 8%, transparent);
+    vertical-align: top;
+  }
+  .docs-table th {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--fg) 55%, transparent);
+    border-bottom: 1px solid color-mix(in oklch, var(--fg) 18%, transparent);
+    font-weight: 500;
+  }
+  .docs-table td {
+    color: color-mix(in oklch, var(--fg) 80%, transparent);
+    line-height: 1.5;
+  }
+  .docs-table code {
+    font-size: 0.85rem;
+  }
+
+  /* Links ------------------------------------------------------------ */
+  .docs-section a, .docs-footer a, .docs-note a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--color-teal) 60%, transparent);
+    text-underline-offset: 3px;
+  }
+  .docs-section a:hover, .docs-footer a:hover { color: var(--color-teal); }
+
+  /* Footer ----------------------------------------------------------- */
+  .docs-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklch, var(--fg) 10%, transparent);
+    color: color-mix(in oklch, var(--fg) 60%, transparent);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+  .docs-footer p { margin: 0.25rem 0; }
+
+  @media (max-width: 640px) {
+    .endpoint-line code { font-size: 0.85rem; word-break: break-all; }
+    .docs-code { font-size: 0.78rem; }
+  }
+</style>
