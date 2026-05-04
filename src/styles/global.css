@@ -1,5 +1,5 @@
 /* Font face (external) */
-@import url("https://api.fontshare.com/v2/css?f[]=bricolage-grotesque@300,400,500,600,700&f[]=satoshi@300,400,500,700&f[]=jetbrains-mono@400,500&display=swap");
+@import url("https://api.fontshare.com/v2/css?f[]=bricolage-grotesque@300,400,500,600,700&f[]=jetbrains-mono@400,500&display=swap");
 
 /* Tailwind v4 */
 @import "tailwindcss";
