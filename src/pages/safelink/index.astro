@@ -5,8 +5,8 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 ---
 
 <Base
-  title="Qantara SafeLink, verifique um link antes de clicar"
-  description="Cole um endereço e veja em até 60 segundos se o site tem sinais de fraude. Grátis, sem cadastro."
+  title="SafeLink, o link é seguro? Descubra em 2 segundos | Qantara"
+  description="Cole um link, print de boleto ou QR Code Pix e em 2 segundos veja se há sinais de golpe. Grátis, sem cadastro, anônimo."
   minimalHeader
   forceTheme="light"
   hideThemeToggle={true}
@@ -24,13 +24,13 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
             <span class="sl-prompt-caret" aria-hidden="true"></span>
           </p>
           <h1 class="sl-title">
-            Esse Pix vai pra<br class="sl-break" />
-            <em>quem você pensa?</em>
+            O link é seguro?<br class="sl-break" />
+            <em>Descubra em 2 segundos.</em>
           </h1>
           <p class="sl-lede">
             <strong>SafeLink</strong> atravessa link, print e QR Code com você
             antes do dinheiro sair. <em>12 sinais técnicos</em>, dois modelos
-            de IA em consenso e a blocklist da comunidade — sob a mesma mão.
+            de IA em consenso e a blocklist da comunidade, sob a mesma mão.
           </p>
         </header>
 
@@ -103,7 +103,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
                 Confira o nome do recebedor do Pix antes de confirmar.
                 Desconfie de boleto vindo por WhatsApp, código enviado
                 por SMS ou desconto que só vale agora. Se for cartão,
-                use o app oficial do banco — nunca digite número, CVV
+                use o app oficial do banco. Nunca digite número, CVV
                 e validade em formulário direto da página.
               </p>
             </aside>
@@ -149,14 +149,17 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
       </div>
     </section>
 
-    <section class="sl-stats" id="sl-stats" aria-label="em operação" hidden>
+    <section class="sl-stats" id="sl-stats" aria-label="em operação">
       <div class="u-container">
         <div class="sl-stats-head">
           <span class="sl-eyebrow-text">em operação</span>
-          <span class="sl-eyebrow-line"></span>
-          <span class="sl-eyebrow-meta" data-stats-meta>—</span>
+          <span class="sl-eyebrow-meta" data-stats-meta>carregando…</span>
         </div>
         <div class="sl-stats-row" data-stats-grid></div>
+        <p class="sl-stats-foot">
+          atualizado em tempo real ·
+          <a href="https://api.qantara.com.br/safelink/v1/public/stats" target="_blank" rel="noopener">JSON público</a>
+        </p>
       </div>
     </section>
 
@@ -165,7 +168,6 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
         <div class="sl-grid12-aside">
           <div class="sl-eyebrow-row">
             <span class="sl-eyebrow-text">método</span>
-            <span class="sl-eyebrow-line"></span>
             <span class="sl-eyebrow-meta">03 paradas</span>
           </div>
           <h2 class="sl-section-title">
@@ -201,7 +203,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
               </div>
               <p>
                 WHOIS, VirusTotal, Safe Browsing, URLhaus, SSL, Receita,
-                Reclame Aqui, gateways de pagamento e mais — ao mesmo tempo.
+                Reclame Aqui, gateways de pagamento e mais, ao mesmo tempo.
               </p>
             </div>
           </li>
@@ -227,14 +229,13 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
         <div class="sl-grid12-aside">
           <div class="sl-eyebrow-row">
             <span class="sl-eyebrow-text">o que olhamos</span>
-            <span class="sl-eyebrow-line"></span>
             <span class="sl-eyebrow-meta">12 sinais</span>
           </div>
           <h2 class="sl-section-title">
             Técnico, não<br /><em>achismo de IA.</em>
           </h2>
           <p class="sl-section-lede">
-            Toda checagem vem com fonte verificável — você pode auditar
+            Toda checagem vem com fonte verificável. Você pode auditar
             cada número. Sem caixa-preta.
           </p>
         </div>
@@ -316,7 +317,6 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
       <div class="u-container">
         <div class="sl-eyebrow-row">
           <span class="sl-eyebrow-text">por que confiar</span>
-          <span class="sl-eyebrow-line"></span>
           <span class="sl-eyebrow-meta">03 princípios</span>
         </div>
         <ul class="sl-usp-list">
@@ -355,7 +355,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
       <div class="u-container sl-rodape-grid">
         <p class="sl-rodape-lead">
           SafeLink é uma ferramenta gratuita da
-          <a href="/">Qantara</a> — consultoria de engenharia
+          <a href="/">Qantara</a> · consultoria de engenharia
           que constrói sistemas anti-fraude para fintechs e marketplaces.
         </p>
         <nav class="sl-rodape-nav" aria-label="links">
@@ -1054,40 +1054,41 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
   }
   async function loadStats() {
     if (!statsGrid) return;
+    let s = null;
     try {
       const r = await fetch(`${apiBase}/safelink/v1/public/stats`, { cache: "no-store" });
-      if (!r.ok) return;
-      const s = await r.json();
-      // Prompt no hero — sempre tenta mostrar algo (mesmo zerado, vira "online")
-      if (promptCount) {
-        promptCount.textContent = s && s.checks_total > 0
-          ? `${fmt(s.checks_total)} verificacoes`
-          : "online";
-      }
-      if (!s || s.checks_total < 1) {
-        statsSection.hidden = true;
-        return;
-      }
-      if (statsMeta) statsMeta.textContent = `${fmt(s.checks_total)} verificacoes`;
-      statsGrid.innerHTML = "";
-      const tiles = [
-        ["golpes detectados", fmt(s.checks_risco)],
-        ["alertas", fmt(s.checks_cautela)],
-        ["denuncias da comunidade", fmt(s.reports_received)],
-        ["promovidas p/ blocklist", fmt(s.reports_promoted)],
-        ["tempo medio", s.avg_duration_ms ? (s.avg_duration_ms / 1000).toFixed(1) + "s" : "—"],
-      ];
-      for (const [label, value] of tiles) {
-        const tile = document.createElement("div");
-        tile.className = "sl-stat-tile";
-        tile.innerHTML = `<b></b><span></span>`;
-        tile.querySelector("b").textContent = value;
-        tile.querySelector("span").textContent = label;
-        statsGrid.appendChild(tile);
-      }
-      statsSection.hidden = false;
-    } catch {
-      if (promptCount) promptCount.textContent = "online";
+      if (r.ok) s = await r.json();
+    } catch {}
+    s = s || { checks_total: 0, checks_risco: 0, checks_cautela: 0, checks_seguro: 0, reports_received: 0, reports_promoted: 0, avg_duration_ms: 0 };
+
+    if (promptCount) {
+      promptCount.textContent = s.checks_total > 0
+        ? `${fmt(s.checks_total)} verificacoes`
+        : "online";
+    }
+    if (statsMeta) {
+      statsMeta.textContent = s.checks_total > 0
+        ? `${fmt(s.checks_total)} verificacoes`
+        : "primeiros dias";
+    }
+    statsGrid.innerHTML = "";
+    const dash = "—";
+    const pct = (part, total) => total > 0 ? Math.round((part / total) * 100) + "%" : dash;
+    const tiles = [
+      ["verificacoes totais", fmt(s.checks_total)],
+      ["% golpes detectados", pct(s.checks_risco, s.checks_total)],
+      ["% alertas (cautela)", pct(s.checks_cautela, s.checks_total)],
+      ["denuncias recebidas", fmt(s.reports_received)],
+      ["promovidas p/ blocklist", fmt(s.reports_promoted)],
+      ["tempo medio", s.avg_duration_ms ? (s.avg_duration_ms / 1000).toFixed(1) + "s" : dash],
+    ];
+    for (const [label, value] of tiles) {
+      const tile = document.createElement("div");
+      tile.className = "sl-stat-tile";
+      tile.innerHTML = `<b></b><span></span>`;
+      tile.querySelector("b").textContent = value;
+      tile.querySelector("span").textContent = label;
+      statsGrid.appendChild(tile);
     }
   }
   loadStats();
@@ -1740,11 +1741,11 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 
   /* === SHARED LANDING PRIMITIVES (institutional style) ============ */
 
-  /* Eyebrow horizontal — [label] ── [meta]. Padrão institucional. */
+  /* Eyebrow horizontal: [label] [meta]. Sem traço decorativo. */
   .sl-eyebrow-row,
   .sl-stats-head {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.9rem;
     flex-wrap: wrap;
     margin: 0 0 1.4rem 0;
@@ -1760,15 +1761,6 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     color: var(--sl-accent);
     font-weight: 500;
   }
-  .sl-eyebrow-line {
-    flex: 0 0 2.75rem;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      color-mix(in oklch, var(--sl-accent) 55%, transparent),
-      color-mix(in oklch, var(--sl-fg) 10%, transparent)
-    );
-  }
   .sl-eyebrow-meta {
     color: var(--sl-fg-soft);
     flex-shrink: 1;
@@ -1777,7 +1769,6 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
   }
   @media (max-width: 520px) {
     .sl-eyebrow-row, .sl-stats-head { gap: 0.65rem; }
-    .sl-eyebrow-line { display: none; }
   }
 
   /* Section title (display-style, com `<em>` accent) ---------------- */
@@ -1871,6 +1862,20 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     text-transform: lowercase;
     letter-spacing: 0.02em;
   }
+  .sl-stats-foot {
+    margin: 1rem 0 0;
+    font-family: var(--sl-mono);
+    font-size: 0.72rem;
+    color: var(--sl-fg-soft);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+  .sl-stats-foot a {
+    color: var(--sl-accent);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+  .sl-stats-foot a:hover { color: var(--sl-fg); }
 
   /* === HOWTO — timeline vertical com nodes (Method.astro style) === */
   .sl-howto { padding: 4rem 0 4.5rem; }

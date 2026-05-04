@@ -1,6 +1,8 @@
 # Qantara SafeLink
 
-**Ferramenta pública e gratuita para conferir se um link, boleto ou QR Code Pix é golpe — antes de pagar.**
+**O link é seguro? Descubra em 2 segundos.**
+
+Ferramenta pública e gratuita para conferir se um link, print de boleto ou QR Code Pix é golpe — antes de pagar. Grátis, sem cadastro, anônimo.
 
 → <https://qantara.com.br/safelink/>
 
