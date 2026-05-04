@@ -5,27 +5,28 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 ---
 
 <Base
-  title="Qantara · SafeLink — verifique um link antes de clicar"
+  title="Qantara SafeLink — verifique um link antes de clicar"
   description="Análise técnica de URLs em até 60 segundos. Detecta sites de fraude, clonagem de cartão e phishing. Grátis, sem cadastro, sem rastreamento."
+  minimalHeader
 >
   <main class="safelink-main">
     <section class="safelink-hero">
       <div class="u-container">
         <p class="mono kicker">
-          <span class="kicker-sigil">qantara</span>
-          <span class="kicker-sep">·</span>
           <span class="kicker-tool">safelink</span>
         </p>
 
         <h1 class="display title">
-          Verifique um link<br />antes de clicar.
+          Antes de pagar,<br />verifique o link.
         </h1>
 
         <p class="lede">
-          Análise técnica completa em até sessenta segundos. Avaliamos
-          dezessete sinais — domínio, certificado, reputação em
-          antivírus, gateways de pagamento, presença pública e mais —
-          para indicar se um endereço apresenta padrões de fraude.
+          Cole o endereço de uma loja, boleto ou Pix e descubra em
+          até sessenta segundos se há sinais de fraude. Olhamos
+          dezessete pontos — idade do domínio, certificado, reputação
+          em antivírus, gateway de pagamento, CNPJ, redes sociais —
+          os mesmos sinais que um analista de antifraude verificaria
+          antes de liberar uma transação.
         </p>
 
         <form id="sl-form" class="sl-form" novalidate>
@@ -37,7 +38,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
             inputmode="url"
             autocomplete="off"
             spellcheck="false"
-            placeholder="https://"
+            placeholder="cole aqui o link da loja, boleto ou pix"
             required
           />
           <button type="submit" class="sl-submit">
@@ -47,7 +48,14 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
         </form>
 
         <p class="mono meta">
-          gratuito · sem cadastro · sem rastreamento
+          gratuito. sem cadastro. sem rastreamento.
+        </p>
+
+        <p class="safelink-warning">
+          Recebeu um link por WhatsApp, Instagram ou e-mail prometendo
+          desconto, frete grátis ou pix de devolução? Confira aqui antes
+          de transferir qualquer valor. Sites de fraude vivem em média
+          quarenta e oito horas — a idade do domínio já entrega muito.
         </p>
       </div>
     </section>
@@ -111,8 +119,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
         <p>
           SafeLink é uma ferramenta da
           <a href="/">Qantara</a>, estúdio independente de engenharia
-          de software. Para integrar a análise em sua plataforma via
-          API, <a href="/safelink/api">consulte a documentação</a>.
+          de software.
         </p>
       </div>
     </section>
@@ -245,11 +252,6 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
 
 <style>
   .safelink-main {
-    --bg: oklch(0.11 0.012 210);
-    --bg-elev: oklch(0.15 0.015 205);
-    --fg: oklch(0.97 0.008 85);
-    --color-white: #ffffff;
-    color-scheme: dark;
     background: var(--bg);
     color: var(--fg);
     min-height: 100svh;
@@ -351,6 +353,17 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     color: color-mix(in oklch, var(--fg) 45%, transparent);
     font-size: 0.78rem;
     letter-spacing: 0.04em;
+  }
+
+  .safelink-warning {
+    margin-top: 2.5rem;
+    max-width: 38rem;
+    padding: 1.25rem 1.5rem;
+    border-left: 2px solid var(--color-teal);
+    background: color-mix(in oklch, var(--color-teal) 6%, transparent);
+    color: color-mix(in oklch, var(--fg) 80%, transparent);
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
 
   @media (max-width: 640px) {

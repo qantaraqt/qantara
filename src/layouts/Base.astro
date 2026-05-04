@@ -7,11 +7,13 @@ import { faqs, site } from "../content/site";
 interface Props {
   title?: string;
   description?: string;
+  minimalHeader?: boolean;
 }
 
 const {
   title = "Qantara · estúdio de engenharia de software sob medida",
   description = "Estúdio independente de engenharia de software. Sistemas web, segurança, infraestrutura e antifraude, construídos à mão, do primeiro escopo ao deploy em produção.",
+  minimalHeader = false,
 } = Astro.props;
 
 const canonical = "https://qantara.com.br";
@@ -120,7 +122,7 @@ const jsonLd = {
     <div class="ambient-grain" aria-hidden="true"></div>
 
     <!-- hero-human-bar removed as requested -->
-    <Header />
+    <Header minimal={minimalHeader} />
     <slot />
     <ThemeToggle />
 
