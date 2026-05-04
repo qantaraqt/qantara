@@ -1,0 +1,182 @@
+---
+import Base from "../../layouts/Base.astro";
+const updated = "2025-01-29";
+---
+
+<Base
+  title="Política de privacidade — Qantara SafeLink"
+  description="Como tratamos URLs e imagens enviadas ao SafeLink. LGPD-friendly, sem coleta de dados pessoais."
+  minimalHeader
+  forceTheme="light"
+  hideThemeToggle={true}
+>
+  <main class="sl-priv">
+    <article class="u-container sl-priv-wrap">
+      <p class="sl-priv-eyebrow">Política de privacidade · atualizada {updated}</p>
+      <h1>Como o SafeLink trata o que você envia</h1>
+
+      <p class="lede">
+        Esta página é direta, sem juridiquês. O SafeLink foi desenhado
+        para coletar o <em>mínimo possível</em>. Se algo aqui mudar, a
+        data acima muda junto.
+      </p>
+
+      <h2>O que é coletado</h2>
+      <ul>
+        <li>
+          <b>URL que você cola</b>: para fazer a análise técnica
+          (WHOIS, SSL, AVs, conteúdo). Fica em cache no Redis por
+          24 horas para acelerar consultas idênticas. Após isso é
+          apagada automaticamente.
+        </li>
+        <li>
+          <b>Imagens enviadas</b>: processadas <b>apenas em memória</b>.
+          Não são gravadas em disco nem persistidas em banco. O servidor
+          extrai texto (OCR), QR Code e indícios visuais e descarta os
+          bytes da imagem ao final da requisição.
+        </li>
+        <li>
+          <b>Endereço IP</b>: usado exclusivamente para limites de uso
+          (rate limiting) e contagem anti-abuso em denúncias. Quando
+          necessário armazenar (denúncias comunitárias), o IP é gravado
+          como <b>hash truncado SHA-256 (16 chars)</b> — o IP cru nunca
+          é persistido.
+        </li>
+        <li>
+          <b>Resultado agregado</b>: contadores como "X verificações,
+          Y golpes detectados". Esses números são <b>agregados</b>,
+          jamais ligados a você.
+        </li>
+      </ul>
+
+      <h2>O que NÃO é coletado</h2>
+      <ul>
+        <li>Cookies de tracking, pixels de remarketing, fingerprinting.</li>
+        <li>Email, nome, telefone — não pedimos cadastro.</li>
+        <li>Conteúdo de imagens após o processamento.</li>
+        <li>Histórico do que você verificou, ligado ao seu IP/dispositivo.</li>
+      </ul>
+
+      <h2>Retenção</h2>
+      <ul>
+        <li><b>Cache de URLs</b>: 24 horas no Redis.</li>
+        <li><b>Denúncias agregadas</b> (hash de IP + domínio): 90 dias.</li>
+        <li><b>Logs operacionais</b>: 30 dias, sem PII (somente eventos técnicos: timeouts, erros de rede, código HTTP).</li>
+        <li><b>Estatísticas públicas</b> (totais e médias): retenção indefinida — são números, não pessoas.</li>
+      </ul>
+
+      <h2>Imagens com dados pessoais</h2>
+      <p>
+        Print do WhatsApp pode conter nome, foto, mensagem. O SafeLink:
+      </p>
+      <ul>
+        <li>Não persiste a imagem.</li>
+        <li>Envia trechos para modelos de IA (Grok da xAI, Claude via OpenRouter)
+          apenas para extração de indícios de fraude (nomes de banco, valores,
+          urgência artificial). As respostas dos modelos são consumidas
+          sintéticamente; nem a imagem nem texto extraído ficam armazenados
+          no SafeLink após a resposta.</li>
+        <li>Recomendamos: antes de enviar, oculte dados de terceiros
+          que não precisam ser analisados (foto de perfil, número de telefone).
+        </li>
+      </ul>
+
+      <h2>Compartilhamento com terceiros</h2>
+      <p>O SafeLink consulta APIs públicas e gratuitas:</p>
+      <ul>
+        <li><b>Google Safe Browsing</b>: envia somente o domínio.</li>
+        <li><b>VirusTotal</b>: envia somente a URL.</li>
+        <li><b>URLhaus / Receita Federal / Wayback Machine / WHOIS</b>: dados públicos do domínio.</li>
+        <li><b>xAI (Grok) e OpenRouter (Claude)</b>: para análise visual de imagens — recebem o trecho relevante. Operam sob suas próprias políticas (sem treino com inputs de API).</li>
+      </ul>
+      <p>
+        Nenhum desses serviços recebe seu IP, sessão, cookie ou identificador
+        pessoal a partir do SafeLink.
+      </p>
+
+      <h2>Denúncia comunitária</h2>
+      <p>
+        Quando você reporta um link como golpe, gravamos:
+      </p>
+      <ul>
+        <li>O domínio reportado.</li>
+        <li>O <b>hash</b> do seu IP (anti-abuso, evita o mesmo IP votar 100 vezes).</li>
+        <li>Motivo escolhido (phishing, boleto falso, Pix falso, etc.).</li>
+      </ul>
+      <p>
+        Com 3+ denúncias de IPs distintos, o domínio entra automaticamente
+        na blocklist (a menos que esteja em allowlist de instituições verificadas).
+        Após 90 dias, a contagem expira.
+      </p>
+
+      <h2>Seus direitos (LGPD)</h2>
+      <p>
+        O SafeLink é uma ferramenta pública e anônima. Como não coletamos
+        identificadores pessoais ligados a você, não há dados pessoais
+        a portar, retificar ou excluir. Se ainda assim você acreditar que
+        algum dado seu apareceu indevidamente em estatísticas ou
+        denúncias agregadas, escreva para
+        <a href="mailto:contato@qantara.com.br">contato@qantara.com.br</a>.
+      </p>
+
+      <h2>Segurança</h2>
+      <ul>
+        <li>Tráfego sempre via HTTPS.</li>
+        <li>Análise feita em sandbox (Playwright headless), com proteção contra SSRF — endereços privados, loopback e link-local são bloqueados.</li>
+        <li>Não executamos JavaScript da página alvo no seu navegador. O alvo é renderizado isoladamente no servidor.</li>
+      </ul>
+
+      <h2>Mudanças nesta política</h2>
+      <p>
+        Mudanças relevantes são anotadas aqui com a data de atualização
+        no topo. Não usamos email para avisar (não temos seu email).
+      </p>
+
+      <p class="sl-priv-foot">
+        <a href="/safelink/">← voltar para o SafeLink</a>
+      </p>
+    </article>
+  </main>
+</Base>
+
+<style>
+  .sl-priv {
+    background: #fff;
+    color: #14181c;
+    min-height: 100vh;
+    padding: 3rem 0 4rem;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  .sl-priv-wrap { max-width: 42rem; }
+  .sl-priv-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.78rem;
+    color: #586069;
+    margin: 0 0 0.75rem;
+  }
+  .sl-priv h1 {
+    font-size: clamp(1.75rem, 3vw, 2.4rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 1rem;
+  }
+  .sl-priv h2 {
+    font-size: 1.15rem;
+    margin: 2rem 0 0.5rem;
+    letter-spacing: -0.005em;
+  }
+  .sl-priv p, .sl-priv li {
+    line-height: 1.6;
+    color: #1a2026;
+    font-size: 0.96rem;
+  }
+  .sl-priv .lede { color: #586069; font-size: 1.02rem; }
+  .sl-priv ul {
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.45rem;
+  }
+  .sl-priv a { color: #0f766e; text-decoration: underline; text-decoration-thickness: 0.06em; text-underline-offset: 0.18em; }
+  .sl-priv-foot { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid #e3e6ea; }
+</style>

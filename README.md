@@ -58,6 +58,49 @@ Para uso intensivo, contato em <https://qantara.com.br/safelink/api>.
 | QR/Pix | pyzbar + parser EMV-TLV | Decodifica QR e extrai recebedor do Pix BR Code |
 | Cache | Redis | Resposta repetida em <100ms |
 
+## Operação contínua
+
+### Feed automático de blocklist
+A blocklist é alimentada por feeds públicos e gratuitos atualizados periodicamente:
+
+- **URLhaus** (abuse.ch) — últimas ~3000 URLs maliciosas, atualiza a cada 5 min
+- **OpenPhish community** — URLs de phishing ativas
+- **Denúncias da comunidade** (ver abaixo) — auto-promoção com 3+ relatos distintos
+
+Ingestão manual:
+```bash
+docker exec safelink-api python -m app.services.feeds
+```
+
+Em produção, isso roda via cron (ex.: a cada hora). Domínios em allowlist (bancos, governo, marketplaces verificados) **nunca** entram na blocklist por feed nem por denúncia — anti-DoS.
+
+### Denúncia comunitária
+Qualquer usuário pode reportar um link como golpe:
+```bash
+curl -X POST https://api.qantara.com.br/safelink/v1/public/report \
+  -H "Content-Type: application/json" \
+  -d '{"url": "site-suspeito.com", "motivo": "phishing"}'
+```
+
+Motivos aceitos: `phishing`, `boleto_falso`, `pix_falso`, `loja_fake`, `outro`. Limite: 10 denúncias/min/IP. Cada IP só conta uma vez por domínio (anti-abuso). Com 3+ IPs distintos relatando o mesmo domínio, ele entra automaticamente na blocklist.
+
+### Estatísticas em tempo real
+Endpoint público (sem rate limit):
+```bash
+curl https://api.qantara.com.br/safelink/v1/public/stats
+```
+Retorna contadores agregados: total de verificações, distribuição por veredito (RISCO/CAUTELA/SEGURO), total de imagens, denúncias recebidas e promovidas, tempo médio de análise. **Sem PII** — apenas números.
+
+## Privacidade
+
+- **Imagens**: processadas em memória, nunca persistidas em disco/banco. Descartadas ao final da requisição.
+- **URLs**: cacheadas por 24h no Redis para acelerar consultas idênticas. Após isso, expiram.
+- **IP**: usado para rate limit e anti-abuso. Quando precisa ser persistido (denúncias), gravamos apenas hash SHA-256 truncado (16 chars).
+- **Sem cookies de tracking, sem fingerprinting, sem cadastro.**
+- **APIs externas** (Google Safe Browsing, VirusTotal, xAI, OpenRouter) recebem apenas o domínio/URL/imagem analisada — nunca seu IP ou identificador.
+
+Política completa: <https://qantara.com.br/safelink/privacidade>.
+
 ## Estrutura do repositório
 
 ```
