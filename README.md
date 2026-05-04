@@ -28,7 +28,7 @@ Veredicto em 3 níveis claros: **SEGURO** · **VERIFICAR** · **RISCO ALTO**.
 2. Cole o link, **arraste o print** do WhatsApp, ou **cole imagem com Ctrl+V**
 3. Em segundos: veredicto, motivos, recebedor do Pix, ações recomendadas
 
-Sem cadastro, sem rastreamento, gratuito (5 verificações/min por IP).
+Sem cadastro, sem rastreamento, gratuito (5 verificações de URL/min e 3 imagens/min por IP, com cota diária por IP).
 
 ### Como API
 Endpoint público (rate-limited, gratuito):
@@ -64,7 +64,7 @@ Para uso intensivo, contato em <https://qantara.com.br/safelink/api>.
 src/                 # Astro frontend (qantara.com.br + /safelink)
   pages/safelink/    # Landing, API docs, admin
   components/        # UI Astro
-safelink-api/        # Backend FastAPI (gitignored — repo separado em produção)
+safelink-api/        # Backend FastAPI (mantém-se fora do repositório público por enquanto)
   app/services/      # pipeline, heuristics, fetcher, ai_analyzer, image_analyzer, shortener, blocklist
   app/routers/       # public, private, admin
 public/              # assets estáticos

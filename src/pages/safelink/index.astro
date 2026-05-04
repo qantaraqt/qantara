@@ -232,17 +232,36 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     input.focus();
   });
 
-  // Drag & drop em qualquer lugar da página
-  ["dragover", "drop"].forEach((evt) => {
-    window.addEventListener(evt, (e) => { e.preventDefault(); }, false);
-  });
-  window.addEventListener("drop", (e) => {
-    const f = e.dataTransfer?.files && e.dataTransfer.files[0];
-    if (f && f.type && f.type.startsWith("image/")) setPendingImage(f);
-  });
+  // Drag & drop limitado \u00e0 zona do form (n\u00e3o intercepta arquivos
+  // que o usu\u00e1rio s\u00f3 quer abrir em outra aba).
+  const dropZone = form;
+  if (dropZone) {
+    ["dragenter", "dragover"].forEach((evt) => {
+      dropZone.addEventListener(evt, (e) => {
+        if (e.dataTransfer?.types?.includes("Files")) {
+          e.preventDefault();
+          dropZone.dataset.dragover = "1";
+        }
+      });
+    });
+    ["dragleave", "drop"].forEach((evt) => {
+      dropZone.addEventListener(evt, () => { delete dropZone.dataset.dragover; });
+    });
+    dropZone.addEventListener("drop", (e) => {
+      const f = e.dataTransfer?.files && e.dataTransfer.files[0];
+      if (f && f.type && f.type.startsWith("image/")) {
+        e.preventDefault();
+        setPendingImage(f);
+      }
+    });
+  }
 
-  // Paste de imagem (Ctrl+V de print)
+  // Paste de imagem (Ctrl+V de print) \u2014 s\u00f3 quando o foco est\u00e1
+  // em um input/textarea da p\u00e1gina ou no body (sem text selecionado).
   window.addEventListener("paste", (e) => {
+    const t = e.target;
+    const editable = t && (t.isContentEditable || /input|textarea/i.test(t.tagName));
+    if (editable && t !== input && t !== document.body) return;
     const items = e.clipboardData?.items || [];
     for (const it of items) {
       if (it.kind === "file" && it.type.startsWith("image/")) {
@@ -931,6 +950,11 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     transition: color 150ms ease, background-color 150ms ease;
   }
   .sl-attach:hover { color: var(--sl-accent); background: var(--sl-surface); }
+  .sl-form[data-dragover="1"] {
+    outline: 2px dashed var(--sl-accent);
+    outline-offset: 4px;
+    background: var(--sl-accent-soft);
+  }
   .sl-attach-preview {
     margin: 0.6rem auto 0;
     display: inline-flex;
