@@ -9,6 +9,7 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
   description="Cole um endereço e veja em até 60 segundos se o site tem sinais de fraude. Grátis, sem cadastro."
   minimalHeader
   forceTheme="light"
+  hideThemeToggle={true}
 >
   <main class="sl">
     <section class="sl-top">
@@ -68,6 +69,22 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
             <p class="sl-result-meta" data-meta></p>
             <h2 class="sl-result-title" data-title></h2>
             <p class="sl-result-subtitle" data-subtitle></p>
+
+            <aside class="sl-warning" role="note">
+              <p class="sl-warning-kicker">antes de continuar</p>
+              <p class="sl-warning-headline">
+                Não pague, não transfira, não digite senha ou código Pix
+                neste site sem confirmar pelo canal oficial.
+              </p>
+              <p class="sl-warning-body">
+                O SafeLink combina sinais técnicos com dois modelos de IA,
+                mas <b>nenhum sistema acerta 100%</b>. Mesmo quando o
+                resultado parece seguro, golpes financeiros podem se
+                esconder em sites bem montados. Confirme o destinatário do
+                Pix, o CNPJ da loja e nunca informe código recebido por
+                SMS ou WhatsApp.
+              </p>
+            </aside>
 
             <div class="sl-prob" data-prob-wrap hidden>
               <div class="sl-prob-bar"><div class="sl-prob-fill" data-prob-fill></div></div>
@@ -786,6 +803,38 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
   }
 
   /* Ações ---------------------------------------------------------- */
+  .sl-warning {
+    margin: 1.25rem 0 1.5rem;
+    padding: 1.1rem 1.25rem 1.2rem;
+    background: #fff8ec;
+    border: 1px solid color-mix(in oklch, var(--sl-warn) 35%, transparent);
+    border-left: 4px solid var(--sl-warn);
+    border-radius: 8px;
+    color: var(--sl-fg);
+  }
+  .sl-warning-kicker {
+    margin: 0 0 0.45rem 0;
+    font-family: var(--sl-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sl-warn);
+  }
+  .sl-warning-headline {
+    margin: 0 0 0.65rem 0;
+    font-size: 1.02rem;
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--sl-fg);
+  }
+  .sl-warning-body {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--sl-fg-muted);
+  }
+  .sl-warning-body b { color: var(--sl-fg); font-weight: 600; }
+
   .sl-actions {
     display: flex;
     gap: 0.5rem;
@@ -828,23 +877,26 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 0;
     border-top: 1px solid var(--sl-border);
     border-left: 1px solid var(--sl-border);
     background: var(--sl-bg);
   }
+  @media (max-width: 720px) { .sl-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 460px) { .sl-grid { grid-template-columns: 1fr; } }
   .sl-grid li {
     display: grid;
-    grid-template-columns: 2.5rem 1fr;
-    gap: 0.75rem;
-    align-items: center;
-    padding: 1rem 1.1rem;
+    grid-template-columns: 2.25rem 1fr;
+    gap: 0.6rem;
+    align-items: start;
+    padding: 1.1rem 1.15rem;
     border-right: 1px solid var(--sl-border);
     border-bottom: 1px solid var(--sl-border);
     color: var(--sl-fg);
     font-size: 0.92rem;
-    line-height: 1.4;
+    line-height: 1.45;
+    min-height: 4.5rem;
   }
   .sl-grid li b {
     font-family: var(--sl-mono);
@@ -852,6 +904,8 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     color: var(--sl-accent);
     font-weight: 500;
     letter-spacing: 0.02em;
+    line-height: 1.45;
+    padding-top: 0.05rem;
   }
 
   /* Rodapé --------------------------------------------------------- */
