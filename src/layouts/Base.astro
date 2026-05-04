@@ -9,6 +9,7 @@ interface Props {
   description?: string;
   minimalHeader?: boolean;
   noindex?: boolean;
+  forceTheme?: "light" | "dark";
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   description = "Consultoria especializada em engenharia de software. Sistemas web, segurança, infraestrutura e antifraude, construídos à mão, do primeiro escopo ao deploy em produção.",
   minimalHeader = false,
   noindex = false,
+  forceTheme,
 } = Astro.props;
 
 const canonical = "https://qantara.com.br";
@@ -80,17 +82,23 @@ const jsonLd = {
     <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
 
     <!-- Theme bootstrap — set data-theme before paint to avoid FOUC -->
-    <script is:inline>
-      (function () {
-        try {
-          var saved = localStorage.getItem("theme");
-          var theme = saved === "dark" || saved === "light" ? saved : "dark";
-          document.documentElement.setAttribute("data-theme", theme);
-        } catch (_) {
-          document.documentElement.setAttribute("data-theme", "dark");
-        }
-      })();
-    </script>
+    {forceTheme ? (
+      <script is:inline define:vars={{ forceTheme }}>
+        document.documentElement.setAttribute("data-theme", forceTheme);
+      </script>
+    ) : (
+      <script is:inline>
+        (function () {
+          try {
+            var saved = localStorage.getItem("theme");
+            var theme = saved === "dark" || saved === "light" ? saved : "dark";
+            document.documentElement.setAttribute("data-theme", theme);
+          } catch (_) {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        })();
+      </script>
+    )}
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
