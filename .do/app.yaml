@@ -3,7 +3,7 @@ region: nyc
 static_sites:
   - name: qantara-web
     github:
-      repo: andryus/qantara
+      repo: qantaraqt/qantara
       branch: main
       deploy_on_push: true
     build_command: npm run build

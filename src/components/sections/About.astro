@@ -26,8 +26,8 @@ import { site } from "../../content/site";
           <p class="mono about-role">fundador · dev · empreendedor</p>
           <p class="mono about-locale">Vitória/ES · Brasil</p>
           <ul class="about-links" aria-label="Links">
-            <li><a href="https://www.linkedin.com/in/andryus/" target="_blank" rel="noopener noreferrer">linkedin</a></li>
-            <li><a href="https://github.com/andryus" target="_blank" rel="noopener noreferrer">github</a></li>
+            <li><a href={site.linkedin} target="_blank" rel="noopener noreferrer">linkedin</a></li>
+            <li><a href={site.github} target="_blank" rel="noopener noreferrer">github</a></li>
           </ul>
         </figcaption>
       </figure>
@@ -35,34 +35,33 @@ import { site } from "../../content/site";
 
     <div class="col-span-12 md:col-span-8">
       <SectionHeader eyebrow="sobre" meta="consultoria especializada">
-        Uma ponte curta entre o seu negócio e o <em>código</em>.
+        Quem está do outro lado da <em>conversa</em>.
       </SectionHeader>
 
       <div class="about-body">
         <p>
-          A <strong>Qantara</strong> é uma consultoria de engenharia de software
-          orientada a resultados.
-          Sistemas web sob medida, infraestrutura, segurança
-          e antifraude, construídos por uma única pessoa, da concepção ao ar.
+          A <strong>Qantara</strong> é a minha consultoria de engenharia de
+          software. Faço sistemas web sob medida, infraestrutura, segurança
+          e antifraude, sozinho, do desenho inicial até o sistema no ar.
         </p>
         <p>
-          Você fala direto com quem escreve o código. Resposta técnica
-          no mesmo dia, decisões registradas por escrito, zero camada de
-          gerenciamento entre você e o sistema.
+          Isso tem um lado prático: não existe gerente de projeto no meio.
+          Você pergunta, eu respondo no mesmo dia, e toda decisão fica
+          registrada por escrito para a gente não depender de memória.
         </p>
         <p>
-          Domínio profundo em
-          <strong>Python/FastAPI, TypeScript/React, PostgreSQL e Linux/VPS</strong>.
-          Em produção real: workers distribuídos, pools de browsers warm,
-          observabilidade desde o primeiro deploy, antifraude em pagamentos
-          e cadastros, hardening de infraestrutura sob carga.
+          Trabalho principalmente com
+          <strong>Python/FastAPI, TypeScript/React, PostgreSQL e Linux</strong>.
+          Já coloquei em produção workers distribuídos, pools de browsers,
+          antifraude de pagamento e cadastro, e infraestrutura que precisou
+          aguentar carga de verdade.
         </p>
         <p>
-          Postura clara:
-          <strong>stacks <em>boring</em> antes de novidade</strong>,
-          banco relacional como fonte de verdade, monolito modular antes
-          de microserviço, código escrito para ser lido em dois anos.
-          Recuso o que não vou conseguir manter, e digo por escrito por quê.
+          Tenho opiniões e assumo elas:
+          <strong>prefiro tecnologia conhecida a novidade</strong>,
+          banco relacional como fonte de verdade e um monolito bem organizado
+          antes de pensar em microserviço. Se um projeto pede algo que eu não
+          vou conseguir manter, digo isso antes de começar.
         </p>
       </div>
     </div>

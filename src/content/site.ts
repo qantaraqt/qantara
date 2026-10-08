@@ -7,7 +7,8 @@ export const site = {
   brand: "Qantara",
   domain: "qantara.com.br",
   linkedin: "https://www.linkedin.com/in/andryus/",
-  tagline: "engenharia de software, atravessada à mão",
+  github: "https://github.com/qantaraqt",
+  tagline: "engenharia de software sob medida",
   year: 2026,
 } as const;
 
@@ -34,7 +35,7 @@ export const services: Service[] = [
   {
     num: "01",
     title: "Sistemas web sob medida",
-    lede: "Plataformas completas, do primeiro wireframe ao primeiro usuário em produção. Construídas para serem mantidas pelo seu time, ou pelo nosso.",
+    lede: "Plataformas completas, do wireframe ao primeiro usuário real. Código que o seu time consegue manter depois, sem depender de mim.",
     entregas: [
       "Painéis administrativos e dashboards em tempo real",
       "APIs REST tipadas e integrações entre sistemas",
@@ -53,7 +54,7 @@ export const services: Service[] = [
   {
     num: "02",
     title: "E-commerce e pagamentos",
-    lede: "Lojas e checkouts que aguentam dia de Black Friday e auditoria fiscal. Pix, cartão, boleto, splits e antifraude integrados de origem.",
+    lede: "Lojas e checkouts preparados para pico de venda e para auditoria fiscal. Pix, cartão, boleto, split de pagamento e antifraude entram no desenho desde o início.",
     entregas: [
       "Checkout com Pix, boleto, cartão e Apple/Google Pay",
       "Mercado Pago, Stripe, Asaas, splits e estornos",
@@ -72,7 +73,7 @@ export const services: Service[] = [
   {
     num: "03",
     title: "Infraestrutura e deploy",
-    lede: "Servidores Linux que sobem rápido, escalam sem drama e dormem em paz à noite. Observáveis por padrão.",
+    lede: "Servidores Linux configurados para você não precisar pensar neles: monitoramento, backup e alerta antes que o cliente perceba o problema.",
     entregas: [
       "VPS Linux com Nginx, SSL e firewall",
       "Backups automáticos, monitoramento e alertas",
@@ -91,7 +92,7 @@ export const services: Service[] = [
   {
     num: "04",
     title: "Segurança e antifraude",
-    lede: "Proteção operacional para sistemas que ganham dinheiro de verdade: checkouts, contas, APIs públicas e painéis administrativos.",
+    lede: "Proteção para a parte do sistema que movimenta dinheiro: checkout, contas de usuário, API pública e painel administrativo.",
     entregas: [
       "Antifraude para pagamentos, cadastros e cupons",
       "Rate limiting, captchas, fingerprint e bloqueio de bots",
@@ -110,7 +111,7 @@ export const services: Service[] = [
   {
     num: "05",
     title: "Automação e integrações",
-    lede: "Bots, webhooks e jobs que trabalham enquanto seu time dorme. Confiáveis, retrocompatíveis e com retry à prova de falha.",
+    lede: "Bots, webhooks e rotinas que rodam sozinhas e avisam quando algo dá errado, com fila e retry para não perder nenhum evento.",
     entregas: [
       "Bots WhatsApp, Telegram e Discord (oficiais e não-oficiais)",
       "Webhooks com retry, deduplicação e fila",
@@ -168,27 +169,27 @@ export const method: Step[] = [
   {
     num: "01",
     title: "Escuta",
-    desc: "Conversamos sobre o seu negócio antes de falar de tecnologia. Cada projeto começa por contexto real (restrições, time, orçamento, prazo), não por template.",
+    desc: "Antes de falar de tecnologia, quero entender o negócio: o que trava hoje, quem vai usar, quanto tempo e orçamento existem. Isso muda a solução mais do que a escolha da stack.",
   },
   {
     num: "02",
     title: "Plano",
-    desc: "Devolvemos escopo, arquitetura, prazos e orçamento por escrito. Você aprova antes que uma linha de código seja escrita; mudanças de rumo são re-acordadas, não empurradas.",
+    desc: "Devolvo escopo, arquitetura, prazo e orçamento por escrito. Você aprova antes de eu escrever código. Se o rumo mudar no meio do caminho, a gente senta e combina de novo.",
   },
   {
     num: "03",
     title: "Construção",
-    desc: "Sprints curtas, com algo navegável a cada duas semanas. Comunicação direta com quem escreve o código, sem PMs intermediários, sem Jira em cinco camadas, sem ritos vazios.",
+    desc: "Entregas a cada duas semanas, sempre com algo que você consegue abrir e clicar. A conversa é direta comigo, que estou escrevendo o código.",
   },
   {
     num: "04",
-    title: "Travessia",
-    desc: "Deploy em produção, monitoramento ativo e suporte pós-lançamento. O sistema fica vivo; a gente continua disponível para o que ele virar.",
+    title: "Lançamento",
+    desc: "Deploy em produção com monitoramento ligado desde o primeiro dia. Acompanho as primeiras semanas de uso real, que é quando aparecem os problemas que nenhum teste pegou.",
   },
   {
     num: "05",
     title: "Garantia",
-    desc: "30 dias de bugs por nossa conta após o deploy. Retainer mensal opcional, com SLA por escrito. Sistema entregue não é sistema abandonado.",
+    desc: "Bug no que eu entreguei, nos primeiros 30 dias, é por minha conta. Depois disso existe a opção de manutenção mensal, com SLA por escrito.",
   },
 ];
 
@@ -245,8 +246,8 @@ export const notDoing: string[] = [
   "Sites institucionais sem lógica de negócio",
   "Mongo onde Postgres resolve",
   "Reuniões sem pauta e sem registro escrito",
-  "Hora-cobrada — preço fechado por escopo fechado",
-  "Stacks que não vamos manter em dois anos",
+  "Cobrar por hora (trabalho com preço fechado por escopo)",
+  "Tecnologia que eu não vou querer manter daqui a dois anos",
 ];
 
 /**
@@ -264,25 +265,25 @@ export const process: ProcessStep[] = [
   {
     num: "01",
     title: "Conversa",
-    desc: "30 minutos via LinkedIn. Sem custo, sem compromisso. Você descreve o problema; eu pergunto o suficiente para responder com honestidade.",
+    desc: "Meia hora de conversa pelo LinkedIn, sem custo. Você me conta o problema e eu faço as perguntas que preciso para saber se consigo ajudar.",
     meta: "~ 30 min · gratuito",
   },
   {
     num: "02",
     title: "Proposta",
-    desc: "Em até 5 dias úteis, devolvo escopo, arquitetura, prazo e investimento por escrito. Preço fechado por escopo fechado, nunca hora-cobrada.",
+    desc: "Em até 5 dias úteis você recebe escopo, arquitetura, prazo e valor por escrito. O preço é fechado para o escopo combinado; não cobro por hora.",
     meta: "≤ 5 dias úteis · por escrito",
   },
   {
     num: "03",
     title: "Início",
-    desc: "Se fizer sentido: contrato direto entre as partes, 30% na assinatura, início em até 2 semanas. Pagamento em marcos atrelados a entregas validáveis.",
+    desc: "Contrato direto entre nós, 30% na assinatura e início em até duas semanas. O restante do pagamento acompanha as entregas, não o calendário.",
     meta: "início em até 2 semanas",
   },
   {
     num: "04",
-    title: "Recusa honesta",
-    desc: "Se não fizer sentido (escopo errado, prazo impossível, fora do nosso domínio), digo por escrito por quê. Sem proposta forçada, sem orçamento inflado para te afastar.",
+    title: "Se não encaixar",
+    desc: "Se o projeto não é para mim, seja pelo escopo, pelo prazo ou pela área, eu digo por escrito e explico o motivo. Quando conheço alguém que resolve melhor, indico.",
     meta: "mesmo prazo · mesmo cuidado",
   },
 ];
@@ -295,26 +296,26 @@ export interface Faq {
 export const faqs: Faq[] = [
   {
     q: "Quanto custa um projeto?",
-    a: "Trabalhamos com preço fechado por escopo fechado, nunca hora-cobrada. Projetos começam em 4 semanas dedicadas; o investimento varia conforme escopo, integração com sistemas existentes e ambiente de produção. Toda proposta vem por escrito, em até 5 dias úteis após uma conversa inicial, com prazo e arquitetura inclusos.",
+    a: "Trabalho com preço fechado por escopo, não por hora. O menor projeto que aceito ocupa cerca de 4 semanas dedicadas; a partir daí o valor depende do tamanho do escopo, das integrações com o que você já tem e do ambiente de produção. A proposta vem por escrito em até 5 dias úteis depois da primeira conversa, já com prazo e arquitetura.",
   },
   {
     q: "Em quanto tempo um projeto fica pronto?",
-    a: "Damos prazos honestos por escrito antes de começar. Projetos pequenos (integração, automação, módulo isolado) saem em 1 a 3 semanas. Sistemas completos rodam em sprints de 4 a 12 semanas, com algo navegável a cada duas. Você nunca espera dois meses para ver a primeira tela.",
+    a: "Depende do tamanho, e o prazo vai por escrito antes de começar. Uma integração ou automação isolada costuma levar de 1 a 3 semanas. Um sistema completo fica entre 4 e 12 semanas, com entregas a cada duas para você acompanhar o andamento.",
   },
   {
     q: "Como funciona o pagamento?",
-    a: "Em marcos, sempre. Sinal de 30% na assinatura, parcelas intermediárias atreladas a entregas validáveis e ajuste final no deploy em produção. Contrato direto entre as partes, sem intermediários. Nada de pagamento integral antes de ver o sistema rodando.",
+    a: "Em etapas. 30% na assinatura do contrato, parcelas intermediárias ligadas a entregas que você consegue testar, e o ajuste final quando o sistema está em produção. O contrato é direto entre nós, sem intermediário.",
   },
   {
-    q: "Atendem clientes fora do Brasil?",
-    a: "Sim. Trabalhamos em português, espanhol e inglês, em qualquer fuso. Reuniões síncronas curtas, comunicação assíncrona detalhada e ferramentas que o seu time já usa. Pagamento internacional via transferência ou Wise, com nota fiscal regular.",
+    q: "Atende clientes fora do Brasil?",
+    a: "Sim. Falo português, espanhol e inglês e trabalho em qualquer fuso. Prefiro reuniões curtas e comunicação assíncrona bem escrita, nas ferramentas que o seu time já usa. Pagamento internacional por transferência ou Wise, com nota fiscal.",
   },
   {
     q: "Há suporte depois do lançamento?",
-    a: "Sim. Os primeiros 30 dias após o deploy entram em garantia: bugs do que entregamos são corrigidos por nossa conta. Depois disso, retainer mensal opcional para manutenção, ajustes e melhorias contínuas, com SLA por escrito.",
+    a: "Sim. Nos primeiros 30 dias após o deploy, qualquer bug no que eu entreguei é corrigido sem custo. Depois disso, se fizer sentido, existe um plano mensal de manutenção e melhorias, com SLA por escrito.",
   },
   {
-    q: "Trabalham com NDA?",
-    a: "Sim, e por padrão. Boa parte dos projetos que entregamos roda sob NDA recíproco. Detalhes de clientes, arquitetura e números só conversamos depois do acordo assinado.",
+    q: "Trabalha com NDA?",
+    a: "Sim, e na maioria dos projetos é o padrão. Por isso os trabalhos listados aqui aparecem só em resumo; detalhes de cliente, arquitetura e números ficam para depois do acordo assinado.",
   },
 ];

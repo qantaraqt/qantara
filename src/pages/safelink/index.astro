@@ -28,9 +28,10 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
             <em>Descubra antes de pagar.</em>
           </h1>
           <p class="sl-lede">
-            <strong>SafeLink</strong> atravessa link, print e QR Code com você
-            antes do dinheiro sair. <em>12 sinais técnicos</em>, dois modelos
-            de IA em consenso e a blocklist da comunidade, sob a mesma mão.
+            Cole o link, o print da conversa ou o QR Code do Pix.
+            O <strong>SafeLink</strong> cruza <em>12 fontes técnicas</em>, pede
+            a opinião de dois modelos de IA e consulta a blocklist da comunidade
+            antes de dizer se dá para confiar.
           </p>
         </header>
 
@@ -173,12 +174,12 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
             <span class="sl-eyebrow-meta">03 paradas</span>
           </div>
           <h2 class="sl-section-title">
-            Como atravessamos<br />
-            cada link.
+            Como funciona<br />
+            a verificação.
           </h2>
           <p class="sl-section-lede">
-            Linear, validado a cada parada. Você sempre vê
-            <em>onde está</em>, o que vem e por que.
+            Três passos. Enquanto a análise roda, você acompanha
+            <em>cada um</em> na tela.
           </p>
         </div>
 
@@ -214,11 +215,11 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
             <div class="sl-timeline-content">
               <div class="sl-timeline-head">
                 <span class="sl-num">03</span>
-                <h3>veredito em 3 cores, com motivo</h3>
+                <h3>resposta em 3 níveis, com o motivo</h3>
               </div>
               <p>
                 <em>SEGURO</em>, <em>VERIFICAR</em> ou <em>RISCO ALTO</em>.
-                Cada bandeira vem com motivo claro e o que fazer agora.
+                Junto com o nível vem o que foi encontrado e o que fazer em seguida.
               </p>
             </div>
           </li>
@@ -234,11 +235,11 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
             <span class="sl-eyebrow-meta">12 sinais</span>
           </div>
           <h2 class="sl-section-title">
-            Técnico, não<br /><em>achismo de IA.</em>
+            O que a análise<br /><em>olha de fato.</em>
           </h2>
           <p class="sl-section-lede">
-            Toda checagem vem com fonte verificável. Você pode auditar
-            cada número. Sem caixa-preta.
+            Cada item abaixo tem uma fonte que você mesmo pode consultar.
+            O resultado mostra o que cada uma respondeu.
           </p>
         </div>
 
@@ -326,27 +327,28 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
             <span class="sl-num">a</span>
             <h3>sem cadastro, sem rastreamento</h3>
             <p>
-              Não pedimos email nem telefone. Sem cookies de tracking,
-              sem fingerprinting. IPs são hashados antes de qualquer
-              persistência. <a href="/safelink/privacidade">leia a política</a>.
+              Não pedimos email nem telefone, e não usamos cookies de
+              rastreamento. O IP só serve para limitar abuso e é guardado
+              como hash. <a href="/safelink/privacidade">leia a política</a>.
             </p>
           </li>
           <li>
             <span class="sl-num">b</span>
             <h3>consenso entre dois modelos</h3>
             <p>
-              <em>Grok-vision</em> (xAI) e <em>Claude</em> (OpenRouter)
-              precisam concordar antes do veredito. Reduz falso-positivo
-              e expulsa alucinação de modelo único.
+              <em>Grok</em> (xAI) e <em>Claude</em> (via OpenRouter) analisam
+              separadamente. Se um aponta risco alto e o outro diz que está
+              tudo bem, o resultado fica em VERIFICAR em vez de escolher um lado.
             </p>
           </li>
           <li>
             <span class="sl-num">c</span>
-            <h3>blocklist viva, não estática</h3>
+            <h3>blocklist que se atualiza sozinha</h3>
             <p>
-              Feed automático do <em>URLhaus</em> e <em>OpenPhish</em>
-              + denúncia da comunidade que vira bloqueio com 3 votos
-              independentes. Allowlist protege bancos contra DoS reverso.
+              Recebe os feeds do <em>URLhaus</em> e do <em>OpenPhish</em> e as
+              denúncias de quem usa a ferramenta: três denúncias de IPs diferentes
+              bloqueiam um domínio. Bancos, governo e grandes lojas ficam numa lista
+              protegida, para ninguém derrubar um site legítimo com denúncia falsa.
             </p>
           </li>
         </ul>
@@ -356,14 +358,14 @@ const apiBase = import.meta.env.PUBLIC_SAFELINK_API ?? "https://api.qantara.com.
     <section class="sl-rodape">
       <div class="u-container sl-rodape-grid">
         <p class="sl-rodape-lead">
-          SafeLink é uma ferramenta gratuita da
-          <a href="/">Qantara</a> · consultoria de engenharia
-          que constrói sistemas anti-fraude para fintechs e marketplaces.
+          O SafeLink é uma ferramenta gratuita da
+          <a href="/">Qantara</a>, consultoria de engenharia de software
+          que também constrói antifraude para fintechs e marketplaces.
         </p>
         <nav class="sl-rodape-nav" aria-label="links">
           <a href="/safelink/api">/api</a>
           <a href="/safelink/privacidade">/privacidade</a>
-          <a href="https://github.com/andryus" target="_blank" rel="noopener noreferrer">/github</a>
+          <a href="https://github.com/qantaraqt" target="_blank" rel="noopener noreferrer">/github</a>
           <a href="https://www.linkedin.com/in/andryus/" target="_blank" rel="noopener noreferrer">/contato</a>
         </nav>
       </div>
