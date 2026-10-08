@@ -49,7 +49,7 @@ export const services: Service[] = [
       { slug: "fastapi",     name: "FastAPI" },
       { slug: "postgresql",  name: "PostgreSQL" },
     ],
-    cta: "discutir escopo",
+    cta: "conversar sobre o projeto",
   },
   {
     num: "02",
@@ -68,7 +68,7 @@ export const services: Service[] = [
       { slug: "stripe",      name: "Stripe" },
       { slug: "mercadopago", name: "Mercado Pago" },
     ],
-    cta: "avaliar integração",
+    cta: "falar sobre a loja",
   },
   {
     num: "03",
@@ -87,7 +87,7 @@ export const services: Service[] = [
       { slug: "docker",     name: "Docker" },
       { slug: "cloudflare", name: "Cloudflare" },
     ],
-    cta: "auditar infra atual",
+    cta: "revisar a infra atual",
   },
   {
     num: "04",
@@ -106,7 +106,7 @@ export const services: Service[] = [
       { slug: "cloudflare",    name: "Cloudflare" },
       { slug: "linux",         name: "Linux", mono: true },
     ],
-    cta: "discutir riscos",
+    cta: "falar sobre os riscos",
   },
   {
     num: "05",
@@ -125,7 +125,7 @@ export const services: Service[] = [
       { slug: "redis",     name: "Redis" },
       { slug: "celery",    name: "Celery" },
     ],
-    cta: "mapear automação",
+    cta: "falar sobre a automação",
   },
 ];
 
@@ -206,7 +206,7 @@ export const works: Work[] = [
     num: "01",
     title: "Plataforma de verificação distribuída",
     summary:
-      "Workers paralelos em múltiplos nós, painel administrativo em tempo real, fila persistente e WebSocket sob carga. Pool de browsers warm com failover automático entre workers.",
+      "Verificações rodando em paralelo em vários servidores, com painel em tempo real e fila persistente. Cada worker mantém um pool de browsers aberto; se um cai, outro assume sem perder a tarefa.",
     tags: ["FastAPI", "React", "Playwright", "PostgreSQL"],
     year: "2026",
   },
@@ -214,7 +214,7 @@ export const works: Work[] = [
     num: "02",
     title: "E-commerce de produtos digitais",
     summary:
-      "Loja com entrega automática pós-pagamento, Pix e cartão, painel de pedidos, antifraude integrado e split de comissões para revenda.",
+      "Loja que entrega o produto sozinha assim que o pagamento confirma. Pix e cartão, painel de pedidos, antifraude e divisão automática de comissão para revendedores.",
     tags: ["Next.js", "Stripe", "Node"],
     year: "2025",
   },
@@ -222,7 +222,7 @@ export const works: Work[] = [
     num: "03",
     title: "PDV de varejo físico",
     summary:
-      "Vendas, estoque, fiscal e impressão de cupom. Integrado a balança, leitor de código de barras e gaveta de dinheiro, em ambiente offline-first.",
+      "Vendas, estoque, fiscal e impressão de cupom numa loja física. Conversa com balança, leitor de código de barras e gaveta de dinheiro, e continua vendendo quando a internet cai.",
     tags: ["Vue", "Laravel", "MySQL"],
     year: "2025",
   },
@@ -230,7 +230,7 @@ export const works: Work[] = [
     num: "04",
     title: "Roteador de webhooks corporativo",
     summary:
-      "Ponte entre seis sistemas internos: retry exponencial, deduplicação por idempotency key, dead-letter queue e observabilidade em todas as bordas.",
+      "Camada que recebe eventos de seis sistemas internos e entrega para quem precisa. Reenvia quando o destino falha, ignora duplicados e guarda o que não conseguiu entregar para revisão.",
     tags: ["Python", "Redis", "Docker"],
     year: "2024",
   },
