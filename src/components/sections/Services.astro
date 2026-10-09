@@ -1,7 +1,7 @@
 ---
 import SectionHeader from "../ui/SectionHeader.astro";
 import Disclosure from "../ui/Disclosure.astro";
-import { services, site } from "../../content/site";
+import { services } from "../../content/site";
 ---
 
 <section id="servicos" class="section-vault py-20 md:py-28 relative">
@@ -53,12 +53,7 @@ import { services, site } from "../../content/site";
                   ))}
                 </ul>
               </div>
-              <a
-                href={site.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="service-cta mono"
-              >
+              <a href="#contato" class="service-cta mono">
                 {s.cta} →
               </a>
             </div>

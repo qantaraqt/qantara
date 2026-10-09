@@ -1,0 +1,263 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import { site } from "../../content/site";
+---
+
+<section id="contato" class="contact-section py-20 md:py-28">
+  <div class="u-container">
+    <div class="contact-grid">
+      <div class="contact-intro">
+        <SectionHeader eyebrow="contato" meta="resposta em até 24h · dias úteis">
+          Me conta o que <em>precisa</em>.
+        </SectionHeader>
+        <p class="contact-lede">
+          Descreve o problema do seu jeito, sem precisar de termos técnicos.
+          Eu leio pessoalmente e respondo por email, em dia útil, em até 24 horas.
+        </p>
+        <ul class="contact-alt mono">
+          <li>
+            <span class="contact-alt-label">email</span>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <span class="contact-alt-label">linkedin</span>
+            <a href={site.linkedin} target="_blank" rel="noopener noreferrer">/in/andryus</a>
+          </li>
+        </ul>
+      </div>
+
+      <form id="contact-form" class="contact-form" method="post" action="/api/contato" novalidate>
+        <div class="contact-row">
+          <label class="contact-field">
+            <span>nome</span>
+            <input name="nome" type="text" autocomplete="name" required maxlength="120" />
+          </label>
+          <label class="contact-field">
+            <span>email</span>
+            <input name="email" type="email" autocomplete="email" required maxlength="200" />
+          </label>
+        </div>
+        <label class="contact-field">
+          <span>empresa <small>(opcional)</small></span>
+          <input name="empresa" type="text" autocomplete="organization" maxlength="120" />
+        </label>
+        <label class="contact-field">
+          <span>o que você precisa</span>
+          <textarea
+            name="mensagem"
+            rows="6"
+            required
+            minlength="10"
+            maxlength="4000"
+            placeholder="Ex.: temos uma loja que cai em dia de promoção; precisamos de alguém que resolva isso e cuide da infra."
+          ></textarea>
+        </label>
+        <!-- honeypot -->
+        <label class="contact-hp" aria-hidden="true">
+          <span>site</span>
+          <input name="site" type="text" tabindex="-1" autocomplete="off" />
+        </label>
+
+        <div class="contact-actions">
+          <button type="submit" class="btn-primary group inline-flex items-center gap-2.5 rounded-full px-6 py-3 text-[0.92rem] font-medium">
+            <span data-label>Enviar mensagem</span>
+            <span class="transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>
+          </button>
+          <p class="contact-status mono" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  if (form) {
+    const status = form.querySelector(".contact-status") as HTMLElement;
+    const button = form.querySelector("button[type=submit]") as HTMLButtonElement;
+    const label = button.querySelector("[data-label]") as HTMLElement;
+
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      status.textContent = "";
+      status.dataset.state = "";
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      button.disabled = true;
+      label.textContent = "Enviando…";
+
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
+          form.reset();
+          status.dataset.state = "ok";
+          status.textContent = "Recebi. Respondo em até 24h, em dia útil.";
+          label.textContent = "Enviado";
+        } else {
+          throw new Error(data.erro || "falha ao enviar");
+        }
+      } catch (err) {
+        status.dataset.state = "erro";
+        status.textContent =
+          (err as Error).message +
+          ". Se preferir, escreve direto para contato@qantara.com.br.";
+        label.textContent = "Enviar mensagem";
+        button.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+  @media (min-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 5fr 7fr;
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+
+  .contact-lede {
+    max-width: 44ch;
+    margin: -0.25rem 0 2rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: color-mix(in oklch, var(--fg) 70%, transparent);
+  }
+
+  .contact-alt {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+  }
+  .contact-alt li {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .contact-alt-label {
+    width: 4.5rem;
+    color: color-mix(in oklch, var(--fg) 45%, transparent);
+  }
+  .contact-alt a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--color-teal) 60%, transparent);
+    text-underline-offset: 0.2em;
+  }
+  .contact-alt a:hover {
+    text-decoration-color: var(--color-teal);
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    background: color-mix(in oklch, var(--bg-elev) 80%, transparent);
+    border: 1px solid color-mix(in oklch, var(--fg) 10%, transparent);
+  }
+  @media (min-width: 640px) {
+    .contact-form {
+      padding: 2rem;
+    }
+  }
+
+  .contact-row {
+    display: grid;
+    gap: 1.1rem;
+  }
+  @media (min-width: 640px) {
+    .contact-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .contact-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .contact-field > span {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: color-mix(in oklch, var(--fg) 60%, transparent);
+  }
+  .contact-field small {
+    color: color-mix(in oklch, var(--fg) 40%, transparent);
+  }
+  .contact-field input,
+  .contact-field textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--fg);
+    background: color-mix(in oklch, var(--fg) 4%, transparent);
+    border: 1px solid color-mix(in oklch, var(--fg) 14%, transparent);
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.9rem;
+    transition: border-color 0.2s var(--ease-soft), background 0.2s var(--ease-soft);
+  }
+  .contact-field textarea {
+    resize: vertical;
+    min-height: 8rem;
+    line-height: 1.55;
+  }
+  .contact-field input::placeholder,
+  .contact-field textarea::placeholder {
+    color: color-mix(in oklch, var(--fg) 35%, transparent);
+  }
+  .contact-field input:focus-visible,
+  .contact-field textarea:focus-visible {
+    outline: none;
+    border-color: var(--color-teal);
+    background: color-mix(in oklch, var(--color-teal) 6%, transparent);
+  }
+
+  .contact-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.25rem;
+  }
+  .contact-actions button[disabled] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+  .contact-status {
+    font-size: 0.75rem;
+    min-height: 1.2em;
+    color: color-mix(in oklch, var(--fg) 60%, transparent);
+  }
+  .contact-status[data-state="ok"] {
+    color: var(--color-teal-soft);
+  }
+  .contact-status[data-state="erro"] {
+    color: oklch(0.72 0.16 25);
+  }
+</style>

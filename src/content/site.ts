@@ -6,6 +6,7 @@
 export const site = {
   brand: "Qantara",
   domain: "qantara.com.br",
+  email: "contato@qantara.com.br",
   linkedin: "https://www.linkedin.com/in/andryus/",
   github: "https://github.com/qantaraqt",
   tagline: "engenharia de software sob medida",
@@ -17,6 +18,7 @@ export const nav = [
   { href: "#servicos", label: "serviços" },
   { href: "#metodo", label: "método" },
   { href: "#trabalhos", label: "trabalhos" },
+  { href: "#contato", label: "contato" },
 ] as const;
 
 export interface Service {
@@ -265,7 +267,7 @@ export const process: ProcessStep[] = [
   {
     num: "01",
     title: "Conversa",
-    desc: "Meia hora de conversa pelo LinkedIn, sem custo. Você me conta o problema e eu faço as perguntas que preciso para saber se consigo ajudar.",
+    desc: "Você me escreve pelo formulário do site contando o problema. Eu respondo em até um dia útil, e se fizer sentido marcamos meia hora de conversa, sem custo.",
     meta: "~ 30 min · gratuito",
   },
   {

@@ -1,0 +1,20 @@
+name = "qantara-contato"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Recebe POST do formulário de contato em qantara.com.br e entrega por email
+# via Cloudflare Email Routing (destino precisa estar verificado na conta).
+routes = [
+  { pattern = "qantara.com.br/api/contato", zone_name = "qantara.com.br" },
+  { pattern = "www.qantara.com.br/api/contato", zone_name = "qantara.com.br" },
+]
+
+[[send_email]]
+name = "MAIL"
+destination_address = "andresmolinaroms@icloud.com"
+
+[vars]
+FROM_ADDRESS = "contato@qantara.com.br"
+TO_ADDRESS = "andresmolinaroms@icloud.com"
+ALLOWED_ORIGINS = "https://qantara.com.br,https://www.qantara.com.br"

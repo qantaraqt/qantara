@@ -15,8 +15,8 @@ import { site, nav } from "../../content/site";
           </h2>
         </div>
         <div class="col-span-12 md:col-span-4 flex md:justify-end">
-          <Button href={site.linkedin} variant="primary" external={true} class="w-full md:w-auto justify-center">
-            Agendar conversa
+          <Button href="#contato" variant="primary" class="w-full md:w-auto justify-center">
+            Enviar mensagem
           </Button>
         </div>
       </div>
@@ -35,6 +35,11 @@ import { site, nav } from "../../content/site";
       <div>
         <p class="mono text-[0.65rem] text-white/35 mb-4">contato</p>
         <ul class="flex flex-col gap-2 text-sm text-white/65">
+          <li>
+            <a href={`mailto:${site.email}`} class="hover:text-white transition-colors">
+              {site.email}
+            </a>
+          </li>
           <li>
             <a href={site.linkedin} target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">
               linkedin · /in/andryus
