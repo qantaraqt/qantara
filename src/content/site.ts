@@ -171,17 +171,17 @@ export const method: Step[] = [
   {
     num: "01",
     title: "Escuta",
-    desc: "Antes de falar de tecnologia, quero entender o negócio: o que trava hoje, quem vai usar, quanto tempo e orçamento existem. Isso muda a solução mais do que a escolha da stack.",
+    desc: "Antes de falar de tecnologia, procuro entender o negócio: o que limita a operação hoje, quem vai usar o sistema, qual o prazo e o orçamento disponíveis. Isso define a solução mais do que a escolha da tecnologia.",
   },
   {
     num: "02",
     title: "Plano",
-    desc: "Devolvo escopo, arquitetura, prazo e orçamento por escrito. Você aprova antes de eu escrever código. Se o rumo mudar no meio do caminho, a gente senta e combina de novo.",
+    desc: "Devolvo escopo, arquitetura, prazo e orçamento por escrito. Você aprova antes de eu escrever código. Se o rumo mudar durante o projeto, o plano é revisado e acordado novamente.",
   },
   {
     num: "03",
     title: "Construção",
-    desc: "Entregas a cada duas semanas, sempre com algo que você consegue abrir e clicar. A conversa é direta comigo, que estou escrevendo o código.",
+    desc: "Entregas a cada duas semanas, sempre com uma versão navegável. A comunicação é direta comigo, que sou quem escreve o código.",
   },
   {
     num: "04",
@@ -191,7 +191,7 @@ export const method: Step[] = [
   {
     num: "05",
     title: "Garantia",
-    desc: "Bug no que eu entreguei, nos primeiros 30 dias, é por minha conta. Depois disso existe a opção de manutenção mensal, com SLA por escrito.",
+    desc: "Correções de defeitos no que foi entregue, nos primeiros 30 dias, são por minha conta. Depois disso há a opção de manutenção mensal, com SLA por escrito.",
   },
 ];
 
@@ -224,7 +224,7 @@ export const works: Work[] = [
     num: "03",
     title: "PDV de varejo físico",
     summary:
-      "Vendas, estoque, fiscal e impressão de cupom numa loja física. Conversa com balança, leitor de código de barras e gaveta de dinheiro, e continua vendendo quando a internet cai.",
+      "Vendas, estoque, fiscal e impressão de cupom em loja física. Integrado a balança, leitor de código de barras e gaveta de dinheiro, com operação mantida mesmo sem internet.",
     tags: ["Vue", "Laravel", "MySQL"],
     year: "2025",
   },
@@ -267,7 +267,7 @@ export const process: ProcessStep[] = [
   {
     num: "01",
     title: "Conversa",
-    desc: "Você me escreve pelo formulário do site contando o problema. Eu respondo em até um dia útil, e se fizer sentido marcamos meia hora de conversa, sem custo.",
+    desc: "Você descreve o problema pelo formulário do site. Respondo em até um dia útil e, se fizer sentido, agendamos uma conversa de 30 minutos, sem custo.",
     meta: "~ 30 min · gratuito",
   },
   {
@@ -285,7 +285,7 @@ export const process: ProcessStep[] = [
   {
     num: "04",
     title: "Se não encaixar",
-    desc: "Se o projeto não é para mim, seja pelo escopo, pelo prazo ou pela área, eu digo por escrito e explico o motivo. Quando conheço alguém que resolve melhor, indico.",
+    desc: "Se o projeto não for adequado para mim, seja pelo escopo, pelo prazo ou pela área, informo por escrito e explico o motivo. Quando conheço um profissional mais indicado, faço a indicação.",
     meta: "mesmo prazo · mesmo cuidado",
   },
 ];

@@ -8,11 +8,12 @@ import { site } from "../../content/site";
     <div class="contact-grid">
       <div class="contact-intro">
         <SectionHeader eyebrow="contato" meta="resposta em até 24h · dias úteis">
-          Me conta o que <em>precisa</em>.
+          Vamos conversar sobre o seu <em>projeto</em>.
         </SectionHeader>
         <p class="contact-lede">
-          Descreve o problema do seu jeito, sem precisar de termos técnicos.
-          Eu leio pessoalmente e respondo por email, em dia útil, em até 24 horas.
+          Descreva o problema ou a necessidade, sem precisar de termos técnicos.
+          Leio pessoalmente cada mensagem e respondo por email em até 24 horas,
+          em dias úteis.
         </p>
         <ul class="contact-alt mono">
           <li>
@@ -49,7 +50,7 @@ import { site } from "../../content/site";
             required
             minlength="10"
             maxlength="4000"
-            placeholder="Ex.: temos uma loja que cai em dia de promoção; precisamos de alguém que resolva isso e cuide da infra."
+            placeholder="Ex.: nossa loja virtual fica indisponível em dias de promoção e precisamos de alguém que resolva o problema e assuma a infraestrutura."
           ></textarea>
         </label>
         <!-- honeypot -->
@@ -100,7 +101,7 @@ import { site } from "../../content/site";
         if (res.ok && data.ok) {
           form.reset();
           status.dataset.state = "ok";
-          status.textContent = "Recebi. Respondo em até 24h, em dia útil.";
+          status.textContent = "Mensagem recebida. Respondo em até 24h, em dias úteis.";
           label.textContent = "Enviado";
         } else {
           throw new Error(data.erro || "falha ao enviar");
@@ -109,7 +110,7 @@ import { site } from "../../content/site";
         status.dataset.state = "erro";
         status.textContent =
           (err as Error).message +
-          ". Se preferir, escreve direto para contato@qantara.com.br.";
+          ". Se preferir, envie um email para contato@qantara.com.br.";
         label.textContent = "Enviar mensagem";
         button.disabled = false;
       }
